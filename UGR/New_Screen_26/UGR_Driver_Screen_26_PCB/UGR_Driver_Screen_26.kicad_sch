@@ -8196,6 +8196,16 @@
 		)
 		(uuid "c603f5b2-788c-4ce9-b7d5-d872e92d4024")
 	)
+	(text "NOTE: SCHEMATIC PINS ARE IN THE WRONG ORDER BUT THE FOOTPRINT PINS ARE IN THE RIGHT ORDER\n"
+		(exclude_from_sim no)
+		(at 321.056 108.458 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "c77152cd-25aa-4fe5-b014-522aaa117d5d")
+	)
 	(junction
 		(at 266.7 56.515)
 		(diameter 0)

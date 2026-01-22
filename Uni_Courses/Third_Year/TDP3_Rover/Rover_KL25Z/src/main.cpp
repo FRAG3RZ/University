@@ -13,14 +13,14 @@
 
 // === Pin assignments (adjust if needed) ===
 // Left motor
-DigitalOut right_in2(D7);
-DigitalOut right_in1(D6);
-PwmOut     right_pwm(D5);
+DigitalOut left_in2(D7);
+DigitalOut left_in1(D6);
+PwmOut     left_pwm(D5);
 
 // Right motor
-DigitalOut left_in2(D4);
-DigitalOut left_in1(D3);
-PwmOut     left_pwm(D2);
+DigitalOut right_in2(D4);
+DigitalOut right_in1(D3);
+PwmOut     right_pwm(D2);
 
 // RGB LEDs (onboard KL25Z)
 DigitalOut LED_R(LED_RED);
@@ -107,7 +107,7 @@ void move_backward(float duty, int duration_ms) {
     motors_all_off();
 }
 
-void turn_right_skid_reverse_inner(float duty_outer, int duration_ms) {
+void turn_left_skid_reverse_inner(float duty_outer, int duration_ms) {
     printf("Turn left (reverse inner)\n");
     leds_set(true, false, true); // Magenta
 
@@ -119,21 +119,7 @@ void turn_right_skid_reverse_inner(float duty_outer, int duration_ms) {
     motors_all_off();
 }
 
-void turn_right_coast_inner(float duty_outer, int duration_ms) {
-    printf("Turn left (coast inner)\n");
-    leds_set(true, true, false); // Yellow
-
-    left_in1 = 0; left_in2 = 0; // Left coast
-    right_in1 = 1; right_in2 = 0; // Right forward
-
-    left_pwm.write(0.0f);
-    right_pwm.write(duty_outer);
-
-    thread_sleep_for(duration_ms);
-    motors_all_off();
-}
-
-void turn_right_break_inner(float break_inner, float duty_outer, int duration_ms) {
+void turn_left_break_inner(float break_inner, float duty_outer, int duration_ms) {
     printf("Turn left (coast inner)\n");
     leds_set(true, true, false); // Yellow
 
@@ -147,7 +133,7 @@ void turn_right_break_inner(float break_inner, float duty_outer, int duration_ms
     motors_all_off();
 }
 
-void turn_left_skid_reverse_inner(float duty_outer, int duration_ms) {
+void turn_right_skid_reverse_inner(float duty_outer, int duration_ms) {
     printf("Turn right (reverse inner)\n");
     leds_set(false, true, true); // Cyan
 
@@ -159,21 +145,7 @@ void turn_left_skid_reverse_inner(float duty_outer, int duration_ms) {
     motors_all_off();
 }
 
-void turn_left_coast_inner(float duty_outer, int duration_ms) {
-    printf("Turn right (coast inner)\n");
-    leds_set(true, false, false); // Red
-
-    left_in1 = 0; left_in2 = 0; // Left forward
-    right_in1 = 1; right_in2 = 0; // Right coast
-
-    left_pwm.write(0.0f);
-    right_pwm.write(duty_outer);
-
-    thread_sleep_for(duration_ms);
-    motors_all_off();
-}
-
-void turn_left_break_inner(float break_inner, float duty_outer, int duration_ms) {
+void turn_right_break_inner(float break_inner, float duty_outer, int duration_ms) {
     printf("Turn left (coast inner)\n");
     leds_set(true, true, false); // Yellow
 
@@ -186,6 +158,35 @@ void turn_left_break_inner(float break_inner, float duty_outer, int duration_ms)
     thread_sleep_for(duration_ms);
     motors_all_off();
 }
+
+void turn_right_coast_inner(float duty_outer, int duration_ms) {
+    printf("Turn left (coast inner)\n");
+    leds_set(true, true, false); // Yellow
+
+    left_in1 = 1; left_in2 = 0; // Left go
+    right_in1 = 0; right_in2 = 0; // Right coast
+
+    left_pwm.write(duty_outer);
+    right_pwm.write(0.0f);
+
+    thread_sleep_for(duration_ms);
+    motors_all_off();
+}
+
+void turn_left_coast_inner(float duty_outer, int duration_ms) {
+    printf("Turn left (coast inner)\n");
+    leds_set(true, true, false); // Yellow
+
+    left_in1 = 0; left_in2 = 0; // Left coast
+    right_in1 = 1; right_in2 = 0; // Right go
+
+    right_pwm.write(duty_outer);
+    left_pwm.write(0.0f);
+
+    thread_sleep_for(duration_ms);
+    motors_all_off();
+}
+
 
 int main() {
     printf("Dual-motor control demo (KL25Z + L298 + mbed)\n");
@@ -203,59 +204,34 @@ int main() {
         // -----------------------------------------------------
         // 1. Basic forward and backward
         // -----------------------------------------------------
+        /*
         move_forward(0.2f, 1000);
+        move_forward(0.15f, 5000);
         motors_brake(0.5f, 800);
-        
-        move_backward(0.4f, 1000);
-        move_backward(0.5f, 1000);
-        move_backward(0.6f, 1000);
-        motors_brake(0.5f, 800);
-        
+    5
+
         // -----------------------------------------------------
-        // 2. Skidding
-        // -----------------------------------------------------
-        turn_left_skid_reverse_inner(0.76f, 2300);
+        // Right degree turns
+        // ----------------------------------------------------
+        turn_left_skid_reverse_inner(0.65f, 1600);
         motors_brake(0.5f, 200);
 
-        turn_right_skid_reverse_inner(0.76f, 2900);
-        motors_brake(0.5f, 200);
-        
-        // -----------------------------------------------------
-        // 3. Octagon
-        // -----------------------------------------------------
-        
-        for(int i = 0; i<6; i++) {
-            move_forward(0.5f, 700);
-            motors_brake(0.8f, 200);
-            turn_right_skid_reverse_inner(0.8f, 370); //almost 45!!!
-
-        }
-        move_forward(0.5f, 1000);
-        motors_brake(0.8f, 200);
-        turn_right_skid_reverse_inner(0.8f, 400); //almost 45!!!
-        move_forward(0.5f, 700);
-        motors_brake(0.8f, 200);
-        turn_right_skid_reverse_inner(0.8f, 400); //almost 45!!!
-        move_forward(0.5f, 700);
+        turn_right_skid_reverse_inner(0.7f, 1600);
         motors_brake(0.5f, 200);
 
         // -----------------------------------------------------
-        // 4. Happy Turn
-        // -----------------------------------------------------
+        // Smooth Turns
+        // ----------------------------------------------------
+        */
 
-        turn_left_skid_reverse_inner(0.76f, 2200);
+        turn_left_break_inner(1.0f, 0.95f, 5000);
+        motors_brake(0.5f, 1000);
 
- 
-    //}
+        turn_left_break_inner(1.0f, 0.65f, 5000);
+        motors_brake(0.5f, 1000);
 
-    // -----------------------------------------------------
-    // 5. Infinity Sign
-    // -----------------------------------------------------
-
-    move_forward(0.4f, 1000);
-    turn_left_break_inner(1.0f, 0.9f, 4750);
-    move_forward(0.4f, 1000);
-    turn_right_break_inner(1.0f, 0.9f, 4500);
+        turn_right_break_inner(0.9f, 0.75f, 4000);
+        motors_brake(0.5f, 400);
 
 }
 

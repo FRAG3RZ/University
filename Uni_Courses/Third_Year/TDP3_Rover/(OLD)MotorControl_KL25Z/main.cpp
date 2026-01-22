@@ -204,14 +204,7 @@ int main() {
         // 1. Basic forward and backward
         // -----------------------------------------------------
         move_forward(0.4f, 1000);
-        move_forward(0.5f, 1000);
-        move_forward(0.6f, 1000);
-        motors_brake(0.5f, 800);
 
-        move_backward(0.4f, 1000);
-        move_backward(0.5f, 1000);
-        move_backward(0.6f, 1000);
-        motors_brake(0.5f, 800);
         
         // -----------------------------------------------------
         // 2. Skidding
