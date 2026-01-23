@@ -1,0 +1,26 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build (Debug)",
+      "type": "shell",
+      "command": "cmake",
+      "args": ["--build", "${workspaceFolder}/build/Debug", "-j"],
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "Flash (ST-LINK via OpenOCD)",
+      "type": "shell",
+      "command": "openocd",
+      "args": [
+        "-f", "interface/stlink.cfg",
+        "-f", "target/stm32f7x.cfg",
+        "-c",
+        "program ${workspaceFolder}/build/Debug/SSD1963_LCD.elf verify reset exit"
+      ],
+      "dependsOn": "Build (Debug)",
+      "problemMatcher": []
+    }
+  ]
+}
