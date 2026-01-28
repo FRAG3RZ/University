@@ -10,8 +10,18 @@
  */
 
 #include "mbed.h"
+#include <cmath>
+#include <cstdint>
+
+#include "wav_player.h"
+
+#include "car_x_pcm.h"
 
 // === Pin assignments (adjust if needed) ===
+
+// DAC output
+AnalogOut dac(PTE30);
+
 // Left motor
 DigitalOut left_in2(D7);
 DigitalOut left_in1(D6);
@@ -37,6 +47,55 @@ void leds_set(bool r, bool g, bool b) {
     LED_G = !g;
     LED_B = !b;
 }
+
+//========================SOUND=========================
+
+Ticker audioTick;
+
+// Playback config (most common voice setting)
+static constexpr int SAMPLE_RATE = 8000;
+
+// Playback state
+static volatile uint32_t sample_i = 0;
+static volatile bool playing = false;
+
+// Read one int16 little-endian sample from the byte array
+static inline int16_t read_i16le(const unsigned char* p) {
+    return (int16_t)((uint16_t)p[0] | ((uint16_t)p[1] << 8));
+}
+
+void audio_isr() {
+    if (!playing) {
+        dac.write(0.5f);
+        return;
+    }
+
+    uint32_t byte_i = sample_i * 2;
+    if (byte_i + 1 >= lib_Sounds_car_x_pcm_len) {
+        playing = false;
+        sample_i = 0;
+        dac.write(0.5f);
+        return;
+    }
+
+    int16_t s = read_i16le(&lib_Sounds_car_x_pcm[byte_i]);
+    sample_i++;
+
+    // Map -32768..+32767 -> 0.0..1.0
+    float v = 0.5f + (float)s / 65536.0f;
+    dac.write(v);
+}
+
+// Call this to play the clip once
+void play_car_x() {
+    sample_i = 0;
+    playing = true;
+}
+
+// Optional
+bool is_playing() { return playing; }
+
+//=================================================
 
 // === PWM helper ===
 void motors_set_duty_sync(float left_duty, float right_duty) {
@@ -91,6 +150,17 @@ void move_forward(float duty, int duration_ms) {
     right_in1 = 1; right_in2 = 0; // Right forward
 
     motors_set_duty_sync(duty, duty);
+    thread_sleep_for(duration_ms);
+    motors_all_off();
+}
+
+void move_forward_different(float dut_R, float dut_L, int duration_ms) {
+    leds_set(false, true, false); // Green
+
+    left_in1 = 1; left_in2 = 0; // Left forward
+    right_in1 = 1; right_in2 = 0; // Right forward
+
+    motors_set_duty_sync(dut_L, dut_R);
     thread_sleep_for(duration_ms);
     motors_all_off();
 }
@@ -189,6 +259,7 @@ void turn_left_coast_inner(float duty_outer, int duration_ms) {
 
 
 int main() {
+    /*
     printf("Dual-motor control demo (KL25Z + L298 + mbed)\n");
 
     // Set PWM frequency
@@ -221,17 +292,23 @@ int main() {
 
         // -----------------------------------------------------
         // Smooth Turns
-        // ----------------------------------------------------
+        // ---------------------------------------------------
+
+        move_forward_different(0.05f, 0.3f, 5000);
+        motors_brake(0.5f, 1000);
         */
 
-        turn_left_break_inner(1.0f, 0.95f, 5000);
-        motors_brake(0.5f, 1000);
+        // *** Critical fix: prevent deep sleep so Ticker keeps running ***
+        // Turn LEDs off
+        dac.write(0.5f);
+        audioTick.attach(&audio_isr, 1.0f / SAMPLE_RATE);
 
-        turn_left_break_inner(1.0f, 0.65f, 5000);
-        motors_brake(0.5f, 1000);
-
-        turn_right_break_inner(0.9f, 0.75f, 4000);
-        motors_brake(0.5f, 400);
-
+        while (true) {
+            play_car_x();                 // play once
+            while (is_playing()) {
+                ThisThread::sleep_for(10ms);
+            }
+            ThisThread::sleep_for(1500ms);
+        }
 }
 
