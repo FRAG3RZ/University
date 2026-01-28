@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="chap_01_files/libs/clipboard/clipboard.min.js"></script>
+<script src="chap_01_files/libs/quarto-html/tabby.min.js"></script>
+<script src="chap_01_files/libs/quarto-html/popper.min.js"></script>
+<script src="chap_01_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="chap_01_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="chap_01_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="chap_01_files/libs/quarto-html/quarto-syntax-highlighting-065a5179aebd64318d7ea99d77b64a9e.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.8.25">
+
+  <meta name="author" content="Lecturer in Multiscale Materials">
+  <title>C++ Basics:</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="chap_01_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="chap_01_files/libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+      }
+    pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+    div.sourceCode
+      { color: #24292e;  }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #24292e; } /* Normal */
+    code span.al { color: #ff5555; font-weight: bold; } /* Alert */
+    code span.an { color: #6a737d; } /* Annotation */
+    code span.at { color: #d73a49; } /* Attribute */
+    code span.bn { color: #005cc5; } /* BaseN */
+    code span.bu { color: #d73a49; } /* BuiltIn */
+    code span.cf { color: #d73a49; } /* ControlFlow */
+    code span.ch { color: #032f62; } /* Char */
+    code span.cn { color: #005cc5; } /* Constant */
+    code span.co { color: #6a737d; } /* Comment */
+    code span.cv { color: #6a737d; } /* CommentVar */
+    code span.do { color: #6a737d; } /* Documentation */
+    code span.dt { color: #d73a49; } /* DataType */
+    code span.dv { color: #005cc5; } /* DecVal */
+    code span.er { color: #ff5555; text-decoration: underline; } /* Error */
+    code span.ex { color: #d73a49; font-weight: bold; } /* Extension */
+    code span.fl { color: #005cc5; } /* Float */
+    code span.fu { color: #6f42c1; } /* Function */
+    code span.im { color: #032f62; } /* Import */
+    code span.in { color: #6a737d; } /* Information */
+    code span.kw { color: #d73a49; } /* Keyword */
+    code span.op { color: #24292e; } /* Operator */
+    code span.ot { color: #6f42c1; } /* Other */
+    code span.pp { color: #d73a49; } /* Preprocessor */
+    code span.re { color: #6a737d; } /* RegionMarker */
+    code span.sc { color: #005cc5; } /* SpecialChar */
+    code span.ss { color: #032f62; } /* SpecialString */
+    code span.st { color: #032f62; } /* String */
+    code span.va { color: #e36209; } /* Variable */
+    code span.vs { color: #032f62; } /* VerbatimString */
+    code span.wa { color: #ff5555; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="chap_01_files/libs/revealjs/dist/theme/quarto-cd0dc4f2d43adb95807902f0fa75376a.css">
+  <link rel="stylesheet" href="simple.css">
+  <link href="chap_01_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="chap_01_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="chap_01_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="chap_01_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="center">
+  <h1 class="title">C++ Basics:</h1>
+  <p class="subtitle">Statements, Variables and Objects</p>
+  <p class="author"></p><p>Khiem Nguyen <br>Lecturer in Multiscale Materials <br><a href="mailto:khiem.nguyen@glasgow.ac.uk" class="email">khiem.nguyen@glasgow.ac.uk</a></p><p></p>
+</section><section id="TOC">
+<nav role="doc-toc"> 
+<h2 id="toc-title">Presentation Outline</h2>
+<ul>
+<li><a href="#/statements-and-the-main-function" id="/toc-statements-and-the-main-function">Statements and the <code>main</code> function</a></li>
+<li><a href="#/comments" id="/toc-comments">Comments</a></li>
+<li><a href="#/objects-and-variables" id="/toc-objects-and-variables">Objects and variables</a></li>
+<li><a href="#/variable-assignment-and-initialization" id="/toc-variable-assignment-and-initialization">Variable assignment and initialization</a></li>
+<li><a href="#/introduction-to-iostream-cout-cin-and-endl" id="/toc-introduction-to-iostream-cout-cin-and-endl">Introduction to iostream: <code>cout</code>, <code>cin</code>, and <code>endl</code></a></li>
+</ul>
+</nav>
+</section>
+<section>
+<section id="statements-and-the-main-function" class="title-slide slide level1 center">
+<h1>Statements and the <code>main</code> function</h1>
+
+</section>
+<section id="statements" class="slide level2">
+<h2>Statements</h2>
+<ul>
+<li>When we convey an idea to another person, we communicate in sentences.</li>
+<li>In C++, when we want to have our program do something, we write statements.</li>
+<li>Statements are by far the most common type of instruction in a C++ program.</li>
+<li>Most (but not all) statements in C++ end in a semicolon.</li>
+</ul>
+<h3 id="different-kinds-of-statements">Different kinds of statements</h3>
+<ul>
+<li>Declaration statements</li>
+<li>Jump statements</li>
+<li>Expression statements</li>
+<li>Compound statements</li>
+<li>Selection statements (conditionals)</li>
+<li>Iteration statements (loops)</li>
+<li>Try blocks</li>
+</ul>
+</section>
+<section id="function-and-the-main-function" class="slide level2">
+<h2>Function and the <code>main</code> function</h2>
+<ul>
+<li>A <strong>function</strong> is a collection of statements that get executed sequentially (in order, from top to bottom).</li>
+</ul>
+<p><strong>Rule</strong><br>
+Every C++ program must have a special function named <code>main</code> (all lower case letters).</p>
+<div id="lst-hello" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-hello-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;1: Hello world
+</figcaption>
+<div aria-describedby="lst-hello-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb1-1"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span><span class="pp"> </span><span class="co">// we need this include to use std::cout</span></span>
+<span id="cb1-2"><a href=""></a></span>
+<span id="cb1-3"><a href=""></a><span class="dt">int</span> main<span class="op">()</span>      <span class="co">// Every program must have main function</span></span>
+<span id="cb1-4"><a href=""></a><span class="op">{</span>   <span class="co">// openning the curly brace for function "main"</span></span>
+<span id="cb1-5"><a href=""></a>    </span>
+<span id="cb1-6"><a href=""></a>    <span class="co">// Indentation is not needed in C++. </span></span>
+<span id="cb1-7"><a href=""></a>    <span class="co">// Indentation is for reading purpose.</span></span>
+<span id="cb1-8"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Hello world!"</span><span class="op">;</span></span>
+<span id="cb1-9"><a href=""></a></span>
+<span id="cb1-10"><a href=""></a>    <span class="co">// My thinking: return 0 can be thought as "0 error", </span></span>
+<span id="cb1-11"><a href=""></a>    <span class="co">// although the number "0" not about the number of errors.</span></span>
+<span id="cb1-12"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span>       </span>
+<span id="cb1-13"><a href=""></a><span class="op">}</span>   <span class="co">// closing the curly brace for function "main"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section>
+<section id="syntax-and-syntax-errors" class="slide level2">
+<h2>Syntax and syntax errors</h2>
+<ul>
+<li>In the English language, sentences are constructed according to specific grammatical rules that you probably learned in English class in school.</li>
+<li>The C++ programming language also has a syntax, which describes how the elements of your program must be written and arranged in order for the program to be considered valid.</li>
+<li>When you compile your program, the compiler is responsible for making sure your program follows these syntactical rules.</li>
+</ul>
+<div id="lst-hello" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-hello-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;2: Hello world with syntax error!
+</figcaption>
+<div aria-describedby="lst-hello-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb2-1"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb2-2"><a href=""></a></span>
+<span id="cb2-3"><a href=""></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb2-4"><a href=""></a><span class="op">{</span></span>
+<span id="cb2-5"><a href=""></a>   <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Hello world!"</span>  <span class="co">// we forget the semicolon ";" here.</span></span>
+<span id="cb2-6"><a href=""></a>   <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb2-7"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+<p><strong>Note</strong>&nbsp; See the compilation process in live lecture.</p>
+</section></section>
+<section>
+<section id="comments" class="title-slide slide level1 center">
+<h1>Comments</h1>
+
+</section>
+<section id="comments-1" class="slide level2">
+<h2>Comments</h2>
+<p>We all know what comments in programming language are and do.</p>
+<p>In C++ there are two different styles of comments.</p>
+<ul>
+<li>Single-line comments</li>
+<li>Multi-line comments</li>
+</ul>
+</section>
+<section id="single-line-comments" class="slide level2">
+<h2>Single-line comments</h2>
+<p>The <code>//</code> symbol begins a C++ single-line comment, which tells the compiler to ignore everything from the <code>//</code> symbol to the end of the line.</p>
+<div id="lst-comment-short" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-comment-short-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;3: Comment at the end of the code
+</figcaption>
+<div aria-describedby="lst-comment-short-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb3-1"><a href=""></a><span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Hello world!"</span><span class="op">;</span> <span class="co">// Everything from here is ignored.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+<div id="lst-comment-long" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-comment-long-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;4: Break the comments to prevent long line of code
+</figcaption>
+<div aria-describedby="lst-comment-long-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb4-1"><a href=""></a><span class="co">// std::cout lives in the iostream library</span></span>
+<span id="cb4-2"><a href=""></a><span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Hello world!</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb4-3"><a href=""></a><span class="co">// this is much easier to read</span></span>
+<span id="cb4-4"><a href=""></a><span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"It is very nice to meet you!</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb4-5"><a href=""></a><span class="co">// don't you think so?</span></span>
+<span id="cb4-6"><a href=""></a><span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Yeah!</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section>
+<section id="multi-line-comments" class="slide level2">
+<h2>Multi-line comments</h2>
+<p>The <code>/*</code> and <code>*/</code> pair of symbols denotes a C-style multi-line comment. Everything in between the symbols is ignored.</p>
+<div id="lst-multiline-comment" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-multiline-comment-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;5: Multi-line comment
+</figcaption>
+<div aria-describedby="lst-multiline-comment-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb5-1"><a href=""></a><span class="co">/* This is a multi-line comment.</span></span>
+<span id="cb5-2"><a href=""></a><span class="co">   This line will be ignored.</span></span>
+<span id="cb5-3"><a href=""></a><span class="co">   So will this one. */</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+<p>Since everything between the symbols is ignored, you will sometimes see programmers “beautify” their multi-line comments:</p>
+<div id="lst-multiline-comment" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-multiline-comment-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;6: Beautify multi-line comment
+</figcaption>
+<div aria-describedby="lst-multiline-comment-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb6-1"><a href=""></a><span class="co">/* This is a multi-line comment.</span></span>
+<span id="cb6-2"><a href=""></a><span class="co"> * the matching asterisks to the left</span></span>
+<span id="cb6-3"><a href=""></a><span class="co"> * can make this easier to read</span></span>
+<span id="cb6-4"><a href=""></a><span class="co"> */</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section></section>
+<section>
+<section id="objects-and-variables" class="title-slide slide level1 center">
+<h1>Objects and variables</h1>
+
+</section>
+<section id="objects-and-variables-1" class="slide level2">
+<h2>Objects and variables</h2>
+<ul>
+<li>In C++, direct memory access is discouraged. Instead, we access memory indirectly through an <strong>object</strong>.</li>
+<li>An <strong>object</strong> represents a region of storage (typically RAM or a CPU register) that can hold a value.</li>
+<li>Although objects in C++ can be unnamed (anonymous), more often we name our objects using an <strong>identifier</strong>.</li>
+<li>An object with a name is called a <strong>variable</strong>.</li>
+</ul>
+<p>We shall learn more about <strong>object</strong> in <strong>Object-Oriented Programming</strong>.</p>
+</section>
+<section id="variable-definition" class="slide level2">
+<h2>Variable definition</h2>
+<ul>
+<li>In order to use a variable in our C++ program, we need to tell the compiler that we want one.</li>
+<li>The most common way to do this is by use of a special kind of declaration statement called a <strong>definition</strong>.</li>
+</ul>
+<div id="lst-define-variable" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-define-variable-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;7: Define variables
+</figcaption>
+<div aria-describedby="lst-define-variable-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb7-1"><a href=""></a><span class="dt">int</span> x<span class="op">;</span> <span class="co">// define a variable named x (of type int)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+<div id="lst-define-variable-program" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-define-variable-program-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;8: Full program: define a variable named x
+</figcaption>
+<div aria-describedby="lst-define-variable-program-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb8-1"><a href=""></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb8-2"><a href=""></a><span class="op">{</span></span>
+<span id="cb8-3"><a href=""></a>    <span class="dt">int</span> x<span class="op">;</span> <span class="co">// definition of variable x</span></span>
+<span id="cb8-4"><a href=""></a></span>
+<span id="cb8-5"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb8-6"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section>
+<section id="variable-definition-1" class="slide level2">
+<h2>Variable definition</h2>
+<ul>
+<li>Study the following example – Watch my compilation process!</li>
+</ul>
+<div id="lst-define-variable-program" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-define-variable-program-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;9: Full program: define multiple variables
+</figcaption>
+<div aria-describedby="lst-define-variable-program-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb9-1"><a href=""></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb9-2"><a href=""></a><span class="op">{</span></span>
+<span id="cb9-3"><a href=""></a>    <span class="dt">int</span> x<span class="op">;</span>              <span class="co">// definition of variable x</span></span>
+<span id="cb9-4"><a href=""></a>    <span class="dt">int</span> y<span class="op">;</span>              <span class="co">// definition of variable y</span></span>
+<span id="cb9-5"><a href=""></a>    <span class="co">// Define multiple variables in one line</span></span>
+<span id="cb9-6"><a href=""></a>    <span class="dt">int</span> a<span class="op">,</span> b<span class="op">;</span>           <span class="co">// note the comma between a and b</span></span>
+<span id="cb9-7"><a href=""></a>    <span class="co">// This is wrong:</span></span>
+<span id="cb9-8"><a href=""></a>    <span class="co">// int a, int b;    // wrong (compiler error)</span></span>
+<span id="cb9-9"><a href=""></a></span>
+<span id="cb9-10"><a href=""></a>    <span class="dt">int</span> a1<span class="op">;</span> <span class="dt">double</span> a2<span class="op">;</span> <span class="co">// correct (but not recommended)</span></span>
+<span id="cb9-11"><a href=""></a>    <span class="co">// correct and recommended -- write in separte lines(easier to read)</span></span>
+<span id="cb9-12"><a href=""></a>    <span class="dt">int</span> b1<span class="op">;</span></span>
+<span id="cb9-13"><a href=""></a>    <span class="dt">double</span> b2<span class="op">;</span></span>
+<span id="cb9-14"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb9-15"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section></section>
+<section>
+<section id="variable-assignment-and-initialization" class="title-slide slide level1 center">
+<h1>Variable assignment and initialization</h1>
+
+</section>
+<section id="variable-assignment" class="slide level2">
+<h2>Variable assignment</h2>
+<ul>
+<li>After a variable has been defined, we can give it a value (in a separate statement) using the <code>=</code> operator.</li>
+<li>This process is called <strong>assignment</strong>, and the <code>=</code> operator is called the assignment operator.</li>
+</ul>
+<div id="lst-variable-assignment" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-variable-assignment-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;10: Variable assignment
+</figcaption>
+<div aria-describedby="lst-variable-assignment-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb10-1"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb10-2"><a href=""></a></span>
+<span id="cb10-3"><a href=""></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb10-4"><a href=""></a><span class="op">{</span></span>
+<span id="cb10-5"><a href=""></a>    <span class="dt">int</span> width<span class="op">;</span> <span class="co">// define a variable named width</span></span>
+<span id="cb10-6"><a href=""></a>    width <span class="op">=</span> <span class="dv">5</span><span class="op">;</span> <span class="co">// copy assignment of value 5 into variable width</span></span>
+<span id="cb10-7"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> width<span class="op">;</span> <span class="co">// prints 5</span></span>
+<span id="cb10-8"><a href=""></a>    width <span class="op">=</span> <span class="dv">7</span><span class="op">;</span> <span class="co">// change value stored in variable width to 7</span></span>
+<span id="cb10-9"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> width<span class="op">;</span> <span class="co">// prints 7</span></span>
+<span id="cb10-10"><a href=""></a>    </span>
+<span id="cb10-11"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb10-12"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section>
+<section id="variable-initialization" class="slide level2">
+<h2>Variable initialization</h2>
+<ul>
+<li>One downside of assignment is that assigning a value to a just-defined object requires two statements: one to define the variable, and another to assign the value.</li>
+<li>These two steps can be combined. When an object is defined, we can optionally provide an initial value for the object.</li>
+<li>The process of specifying an initial value for an object is called <strong>initialization</strong>, and the syntax used to initialize an object is called an <strong>initializer</strong>.</li>
+</ul>
+<div id="lst-variable-initialization" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-variable-initialization-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;11: Variable initialization
+</figcaption>
+<div aria-describedby="lst-variable-initialization-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb11-1"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb11-2"><a href=""></a></span>
+<span id="cb11-3"><a href=""></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb11-4"><a href=""></a><span class="op">{</span></span>
+<span id="cb11-5"><a href=""></a>    <span class="dt">int</span> width <span class="op">{</span> <span class="dv">5</span> <span class="op">};</span>    <span class="co">// define variable width and initialize with initial value 5</span></span>
+<span id="cb11-6"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> width<span class="op">;</span> <span class="co">// prints 5</span></span>
+<span id="cb11-7"><a href=""></a></span>
+<span id="cb11-8"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb11-9"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section>
+<section id="different-forms-of-initialization" class="slide level2">
+<h2>Different forms of initialization</h2>
+<ul>
+<li>There are <span class="math inline">\(5\)</span> common forms of initialization in C++</li>
+</ul>
+<div id="lst-different-forms" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-different-forms-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;12: Different forms of initialization in C++
+</figcaption>
+<div aria-describedby="lst-different-forms-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb12-1"><a href=""></a><span class="dt">int</span> a<span class="op">;</span>         <span class="co">// default-initialization (no initializer)</span></span>
+<span id="cb12-2"><a href=""></a></span>
+<span id="cb12-3"><a href=""></a><span class="co">// Traditional initialization forms:</span></span>
+<span id="cb12-4"><a href=""></a><span class="dt">int</span> b <span class="op">=</span> <span class="dv">5</span><span class="op">;</span>     <span class="co">// copy-initialization (initial value after equals sign)</span></span>
+<span id="cb12-5"><a href=""></a><span class="dt">int</span> c <span class="op">(</span> <span class="dv">6</span> <span class="op">);</span>   <span class="co">// direct-initialization (initial value in parenthesis)</span></span>
+<span id="cb12-6"><a href=""></a></span>
+<span id="cb12-7"><a href=""></a><span class="co">// Modern initialization forms (preferred):</span></span>
+<span id="cb12-8"><a href=""></a><span class="dt">int</span> d <span class="op">{</span> <span class="dv">7</span> <span class="op">};</span>   <span class="co">// direct-list-initialization (initial value in braces)</span></span>
+<span id="cb12-9"><a href=""></a><span class="dt">int</span> e <span class="op">{};</span>      <span class="co">// value-initialization (empty braces)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+<ul>
+<li>As of C++17, <strong>copy-initialization</strong>, <strong>direct-initialization</strong>, and <strong>direct-list-initialization</strong> behave identically in most cases.</li>
+<li><em>The modern way to initialize objects in C++ is to use a form of initialization that makes use of curly braces</em>. This is called <strong>list-initialization</strong> (or <strong>uniform initialization</strong> or <strong>brace initialization</strong>).</li>
+</ul>
+<p><u><strong>Best practice</strong></u>&nbsp; Prefer <strong>direct-list-initialization</strong> or <strong>value-initialization</strong> to initialize your variables.</p>
+</section>
+<section id="unused-initialized-variables-warnings" class="slide level2">
+<h2>Unused initialized variables warnings</h2>
+<div id="lst-unused-variable" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-unused-variable-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;13: Unused variable
+</figcaption>
+<div aria-describedby="lst-unused-variable-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb13-1"><a href=""></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb13-2"><a href=""></a><span class="op">{</span></span>
+<span id="cb13-3"><a href=""></a>    <span class="dt">int</span> x <span class="op">{</span> <span class="dv">5</span> <span class="op">};</span> <span class="co">// variable x defined</span></span>
+<span id="cb13-4"><a href=""></a></span>
+<span id="cb13-5"><a href=""></a>    <span class="co">// but not used anywhere</span></span>
+<span id="cb13-6"><a href=""></a></span>
+<span id="cb13-7"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb13-8"><a href=""></a><span class="op">}</span></span>
+<span id="cb13-9"><a href=""></a><span class="co">// Use the compiling command to see the warning</span></span>
+<span id="cb13-10"><a href=""></a><span class="co">// g++ -Wall unused_variable.cpp</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section></section>
+<section>
+<section id="introduction-to-iostream-cout-cin-and-endl" class="title-slide slide level1 center">
+<h1>Introduction to iostream: <code>cout</code>, <code>cin</code>, and <code>endl</code></h1>
+
+</section>
+<section id="the-inputoutput-library" class="slide level2">
+<h2>The input/output library</h2>
+<ul>
+<li>The input/output library (io library) is part of the C++ standard library that deals with basic input and output.</li>
+<li>The <em>io</em> part of <em>iostream</em> stands for input/output.</li>
+<li>To use the functionality defined within the iostream library, we need to include the iostream header at the top of any code file.</li>
+</ul>
+</section>
+<section id="using-stdcout-to-output-to-console" class="slide level2">
+<h2>Using <code>std::cout</code> to output to console</h2>
+<ul>
+<li>The <code>iostream</code> library contains a few predefined variables for us to use.</li>
+<li><code>std::cout</code> allows us to send data to the console to be printed as text.</li>
+<li><code>cout</code> stands for “character output”.</li>
+</ul>
+<div id="lst-use-stdcout" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-use-stdcout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;14: Use of <code>std::cout</code>
+</figcaption>
+<div aria-describedby="lst-use-stdcout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb14-1"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span><span class="pp"> </span><span class="co">// for std::cout</span></span>
+<span id="cb14-2"><a href=""></a></span>
+<span id="cb14-3"><a href=""></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb14-4"><a href=""></a><span class="op">{</span></span>
+<span id="cb14-5"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Hello world!</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span> <span class="co">// print Hello world! to console</span></span>
+<span id="cb14-6"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="dv">4</span><span class="op">;</span> <span class="co">// print 4 to console</span></span>
+<span id="cb14-7"><a href=""></a></span>
+<span id="cb14-8"><a href=""></a>    <span class="dt">int</span> x<span class="op">{</span> <span class="dv">5</span> <span class="op">};</span>             <span class="co">// define integer variable x, initialized with value 5</span></span>
+<span id="cb14-9"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> x<span class="op">;</span>         <span class="co">// print value of x (5) to console</span></span>
+<span id="cb14-10"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span>      <span class="co">// enter a new line</span></span>
+<span id="cb14-11"><a href=""></a></span>
+<span id="cb14-12"><a href=""></a>    <span class="co">// chain the output</span></span>
+<span id="cb14-13"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"I"</span> <span class="op">&lt;&lt;</span> <span class="st">" am"</span> <span class="op">&lt;&lt;</span> <span class="st">" Khiem"</span> <span class="op">&lt;&lt;</span> <span class="st">" Nguyen"</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
+<span id="cb14-14"><a href=""></a></span>
+<span id="cb14-15"><a href=""></a>    <span class="dt">int</span> a <span class="op">{</span> <span class="dv">8</span> <span class="op">},</span> b <span class="op">{</span> <span class="dv">1</span> <span class="op">};</span></span>
+<span id="cb14-16"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Hello "</span> <span class="op">&lt;&lt;</span> a <span class="op">&lt;&lt;</span> <span class="st">" planets and "</span> <span class="op">&lt;&lt;</span> b <span class="op">&lt;&lt;</span> <span class="st">" sun.</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb14-17"><a href=""></a></span>
+<span id="cb14-18"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb14-19"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section>
+<section id="using-stdendl-to-output-a-newline" class="slide level2">
+<h2>Using <code>std::endl</code> to output a newline</h2>
+<ul>
+<li>One way to output a newline is to output <code>std::endl</code> (which stands for “end line”)</li>
+</ul>
+<div id="lst-newline" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-newline-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;15: Use <code>std::newline</code> to enter a new line
+</figcaption>
+<div aria-describedby="lst-newline-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb15-1"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span><span class="pp"> </span><span class="co">// for std::cout and std::endl</span></span>
+<span id="cb15-2"><a href=""></a></span>
+<span id="cb15-3"><a href=""></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb15-4"><a href=""></a><span class="op">{</span></span>
+<span id="cb15-5"><a href=""></a>    <span class="co">// std::endl will cause the cursor to move to the next line</span></span>
+<span id="cb15-6"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Hi!"</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span>                <span class="co">// try to remove std::endl here</span></span>
+<span id="cb15-7"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"My name is Alex."</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span>   <span class="co">// try to remove std::endl here</span></span>
+<span id="cb15-8"><a href=""></a></span>
+<span id="cb15-9"><a href=""></a>    <span class="co">// However, it is advisable to use:</span></span>
+<span id="cb15-10"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Hi!</span><span class="sc">\n</span><span class="st">"</span> <span class="op">&lt;&lt;</span> <span class="st">"My name is Khiem."</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span>    <span class="co">// \n add a new line too</span></span>
+<span id="cb15-11"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb15-12"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section>
+<section id="using-stdcin-to-input-from-console" class="slide level2">
+<h2>Using <code>std::cin</code> to input from console</h2>
+<ul>
+<li><code>std::cin</code> is another predefined variable in the iostream library.</li>
+<li><code>std::cin</code> (which stands for “character input”) reads input from keyboard.</li>
+</ul>
+<div id="lst-use-stdcin" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-use-stdcin-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;16: Use <code>std::cin</code> to input from keyboard
+</figcaption>
+<div aria-describedby="lst-use-stdcin-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb16-1"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span><span class="pp">  </span><span class="co">// for std::cout and std::cin</span></span>
+<span id="cb16-2"><a href=""></a></span>
+<span id="cb16-3"><a href=""></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb16-4"><a href=""></a><span class="op">{</span></span>
+<span id="cb16-5"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Enter a number: "</span><span class="op">;</span> <span class="co">// ask user for a number</span></span>
+<span id="cb16-6"><a href=""></a></span>
+<span id="cb16-7"><a href=""></a>    <span class="dt">int</span> x<span class="op">{};</span>       <span class="co">// define variable x to hold user input (and value-initialize it)</span></span>
+<span id="cb16-8"><a href=""></a>    <span class="bu">std::</span>cin <span class="op">&gt;&gt;</span> x<span class="op">;</span> <span class="co">// get number from keyboard and store it in variable x</span></span>
+<span id="cb16-9"><a href=""></a></span>
+<span id="cb16-10"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"You entered "</span> <span class="op">&lt;&lt;</span> x <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
+<span id="cb16-11"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb16-12"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section>
+<section id="stdcin-is-buffered" class="slide level2">
+<h2><code>std::cin</code> is buffered</h2>
+<p>We’ll demonstrate this using the following program and run it two times – See compilation process.</p>
+<div id="lst-stdin-buffered" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-stdin-buffered-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;17: <code>std::cin</code> is buffered
+</figcaption>
+<div aria-describedby="lst-stdin-buffered-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb17-1"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span><span class="pp">  </span><span class="co">// for std::cout and std::cin</span></span>
+<span id="cb17-2"><a href=""></a></span>
+<span id="cb17-3"><a href=""></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb17-4"><a href=""></a><span class="op">{</span></span>
+<span id="cb17-5"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Enter two numbers: "</span><span class="op">;</span></span>
+<span id="cb17-6"><a href=""></a></span>
+<span id="cb17-7"><a href=""></a>    <span class="dt">int</span> x<span class="op">{};</span></span>
+<span id="cb17-8"><a href=""></a>    <span class="bu">std::</span>cin <span class="op">&gt;&gt;</span> x<span class="op">;</span></span>
+<span id="cb17-9"><a href=""></a></span>
+<span id="cb17-10"><a href=""></a>    <span class="dt">int</span> y<span class="op">{};</span></span>
+<span id="cb17-11"><a href=""></a>    <span class="bu">std::</span>cin <span class="op">&gt;&gt;</span> y<span class="op">;</span></span>
+<span id="cb17-12"><a href=""></a></span>
+<span id="cb17-13"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"You entered "</span> <span class="op">&lt;&lt;</span> x <span class="op">&lt;&lt;</span> <span class="st">" and "</span> <span class="op">&lt;&lt;</span> y <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
+<span id="cb17-14"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb17-15"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section>
+<section id="operator-and-operator" class="slide level2">
+<h2>Operator <code>&lt;&lt;</code> and Operator <code>&gt;&gt;</code></h2>
+<p>New programmers often mix up <code>std::cin</code>, <code>std::cout</code>, the insertion operator <code>&lt;&lt;</code> and the extraction operator <code>&gt;&gt;</code>. Here’s an easy way to remember:</p>
+<ul>
+<li><p><code>std::cout</code> is used to output a value (<code>cout</code> = character output).</p></li>
+<li><p><code>std::cin</code> is used to get an input value (<code>cin</code> = character input).</p></li>
+<li><p><code>&lt;&lt;</code> is used with <code>std::cout</code>, and <em>shows the direction that data is moving</em>.<br>
+<code>std::cout &lt;&lt; 4</code> moves the value <code>4</code> to the <code>std::cout</code> and thus to the console.</p></li>
+<li><p><code>&gt;&gt;</code> is used with std::cin, and <em>shows the direction that data is moving</em>.<br>
+<code>std::cin &gt;&gt; x</code> moves the value the user entered from the keyboard into variable x.</p></li>
+</ul>
+</section>
+<section id="uninitialized-variables" class="slide level2">
+<h2>Uninitialized variables</h2>
+<ul>
+<li>C/C++ does not automatically initialize most variables to a given value (such as zero).</li>
+<li>When a variable that is not initialized is given a memory address to use to store data, the default value of that variable is whatever (garbage) value happens to already be in that memory address!</li>
+<li>A variable that has not been given a known value (through initialization or assignment) is called an uninitialized variable.</li>
+</ul>
+<p>The terms “<em>initialized</em>” and “<em>uninitialized</em>” are not strict opposites:</p>
+<ul>
+<li>“<em>initialized</em>” means the object was provided with an initial value at the point of definition.</li>
+<li>“<em>unitialized</em>” means the object has not been given a known value yet (through any means, including assignment)</li>
+</ul>
+<p>To Recap:</p>
+<ul>
+<li>Initialized = The object is given a known value at the point of definition.</li>
+<li>Assignement = The object is given a known value beyond the point of definition.</li>
+<li>Uninitialized = The object has not been given a known value yet.</li>
+</ul>
+</section>
+<section id="unitialized-variables" class="slide level2">
+<h2>Unitialized variables</h2>
+<div id="lst-uninitialized-variable" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-uninitialized-variable-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;18: Uninitialized variables
+</figcaption>
+<div aria-describedby="lst-uninitialized-variable-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb18-1"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb18-2"><a href=""></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb18-3"><a href=""></a><span class="op">{</span></span>
+<span id="cb18-4"><a href=""></a>    <span class="co">// define an integer variable named x</span></span>
+<span id="cb18-5"><a href=""></a>    <span class="dt">int</span> x<span class="op">;</span>                  <span class="co">// this variable is uninitialized </span></span>
+<span id="cb18-6"><a href=""></a>                            <span class="co">// because we haven't given it a value</span></span>
+<span id="cb18-7"><a href=""></a></span>
+<span id="cb18-8"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> x <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span> <span class="co">// who knows what we'll get, because x is uninitialized</span></span>
+<span id="cb18-9"><a href=""></a></span>
+<span id="cb18-10"><a href=""></a>    <span class="dt">int</span> y <span class="op">{};</span>       <span class="co">// initialized to 0</span></span>
+<span id="cb18-11"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> y <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
+<span id="cb18-12"><a href=""></a>    </span>
+<span id="cb18-13"><a href=""></a>    <span class="dt">int</span> z <span class="op">{</span> <span class="dv">42</span> <span class="op">};</span>   <span class="co">// initialized to 42</span></span>
+<span id="cb18-14"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> z <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
+<span id="cb18-15"><a href=""></a></span>
+<span id="cb18-16"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb18-17"><a href=""></a><span class="op">}</span></span>
+<span id="cb18-18"><a href=""></a><span class="co">// my compiler always give x=0. To see the warning from the compiler, use</span></span>
+<span id="cb18-19"><a href=""></a><span class="co">// g++ -Wall -Wextra uninitialized_variable_01.cpp</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section>
+<section id="unitialized-variables-1" class="slide level2">
+<h2>Unitialized variables</h2>
+<div id="lst-uninitialized-variable" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-uninitialized-variable-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;19: Uninitialized variables
+</figcaption>
+<div aria-describedby="lst-uninitialized-variable-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb19-1"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb19-2"><a href=""></a></span>
+<span id="cb19-3"><a href=""></a><span class="dt">void</span> dirtyStack<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb19-4"><a href=""></a>    <span class="co">// We create some variables and give them values</span></span>
+<span id="cb19-5"><a href=""></a>    <span class="dt">int</span> a <span class="op">=</span> <span class="dv">42</span><span class="op">;</span></span>
+<span id="cb19-6"><a href=""></a>    <span class="dt">int</span> b <span class="op">=</span> <span class="dv">24</span><span class="op">;</span></span>
+<span id="cb19-7"><a href=""></a>    <span class="dt">int</span> c <span class="op">=</span> <span class="dv">66</span><span class="op">;</span></span>
+<span id="cb19-8"><a href=""></a>    <span class="co">// These values are now sitting on the stack memory</span></span>
+<span id="cb19-9"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Dirtying stack with: "</span> <span class="op">&lt;&lt;</span> a <span class="op">&lt;&lt;</span> <span class="st">", "</span> <span class="op">&lt;&lt;</span> b <span class="op">&lt;&lt;</span> <span class="st">", "</span> <span class="op">&lt;&lt;</span> c <span class="op">&lt;&lt;</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb19-10"><a href=""></a><span class="op">}</span></span>
+<span id="cb19-11"><a href=""></a></span>
+<span id="cb19-12"><a href=""></a><span class="dt">void</span> seeTheJunk<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb19-13"><a href=""></a>    <span class="dt">int</span> x<span class="op">;</span> <span class="co">// Uninitialized!</span></span>
+<span id="cb19-14"><a href=""></a>    <span class="co">// x will likely land on the same memory address where a, b, or c just were</span></span>
+<span id="cb19-15"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Value of uninitialized x: "</span> <span class="op">&lt;&lt;</span> x <span class="op">&lt;&lt;</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb19-16"><a href=""></a><span class="op">}</span></span>
+<span id="cb19-17"><a href=""></a></span>
+<span id="cb19-18"><a href=""></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb19-19"><a href=""></a>    dirtyStack<span class="op">();</span></span>
+<span id="cb19-20"><a href=""></a>    seeTheJunk<span class="op">();</span></span>
+<span id="cb19-21"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb19-22"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="chap_01_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="chap_01_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="chap_01_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="chap_01_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="chap_01_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="chap_01_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="chap_01_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="chap_01_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="chap_01_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="chap_01_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>

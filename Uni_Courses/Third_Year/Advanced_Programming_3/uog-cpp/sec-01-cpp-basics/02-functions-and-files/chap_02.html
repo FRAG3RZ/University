@@ -1,0 +1,1806 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="chap_02_files/libs/clipboard/clipboard.min.js"></script>
+<script src="chap_02_files/libs/quarto-html/tabby.min.js"></script>
+<script src="chap_02_files/libs/quarto-html/popper.min.js"></script>
+<script src="chap_02_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="chap_02_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="chap_02_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="chap_02_files/libs/quarto-html/quarto-syntax-highlighting-065a5179aebd64318d7ea99d77b64a9e.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.8.25">
+
+  <meta name="author" content="Lecturer in Multiscale Materials">
+  <title>Functions</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="chap_02_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="chap_02_files/libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+      }
+    pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+    div.sourceCode
+      { color: #24292e;  }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #24292e; } /* Normal */
+    code span.al { color: #ff5555; font-weight: bold; } /* Alert */
+    code span.an { color: #6a737d; } /* Annotation */
+    code span.at { color: #d73a49; } /* Attribute */
+    code span.bn { color: #005cc5; } /* BaseN */
+    code span.bu { color: #d73a49; } /* BuiltIn */
+    code span.cf { color: #d73a49; } /* ControlFlow */
+    code span.ch { color: #032f62; } /* Char */
+    code span.cn { color: #005cc5; } /* Constant */
+    code span.co { color: #6a737d; } /* Comment */
+    code span.cv { color: #6a737d; } /* CommentVar */
+    code span.do { color: #6a737d; } /* Documentation */
+    code span.dt { color: #d73a49; } /* DataType */
+    code span.dv { color: #005cc5; } /* DecVal */
+    code span.er { color: #ff5555; text-decoration: underline; } /* Error */
+    code span.ex { color: #d73a49; font-weight: bold; } /* Extension */
+    code span.fl { color: #005cc5; } /* Float */
+    code span.fu { color: #6f42c1; } /* Function */
+    code span.im { color: #032f62; } /* Import */
+    code span.in { color: #6a737d; } /* Information */
+    code span.kw { color: #d73a49; } /* Keyword */
+    code span.op { color: #24292e; } /* Operator */
+    code span.ot { color: #6f42c1; } /* Other */
+    code span.pp { color: #d73a49; } /* Preprocessor */
+    code span.re { color: #6a737d; } /* RegionMarker */
+    code span.sc { color: #005cc5; } /* SpecialChar */
+    code span.ss { color: #032f62; } /* SpecialString */
+    code span.st { color: #032f62; } /* String */
+    code span.va { color: #e36209; } /* Variable */
+    code span.vs { color: #032f62; } /* VerbatimString */
+    code span.wa { color: #ff5555; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="chap_02_files/libs/revealjs/dist/theme/quarto-cd0dc4f2d43adb95807902f0fa75376a.css">
+  <link rel="stylesheet" href="simple.css">
+  <link href="chap_02_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="chap_02_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="chap_02_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="chap_02_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="center">
+  <h1 class="title">Functions</h1>
+  <p class="subtitle">Functions, Working with Multiple Files and Header Files</p>
+  <p class="author"></p><p>Khiem Nguyen <br>Lecturer in Multiscale Materials <br><a href="mailto:khiem.nguyen@glasgow.ac.uk" class="email">khiem.nguyen@glasgow.ac.uk</a></p><p></p>
+</section><section id="TOC">
+<nav role="doc-toc"> 
+<h2 id="toc-title">Presentation Outline</h2>
+<ul>
+<li><a href="#/basic-syntax" id="/toc-basic-syntax">Basic Syntax</a></li>
+<li><a href="#/function-retrun-values-value-returning-functions" id="/toc-function-retrun-values-value-returning-functions">Function retrun values (value-returning functions)</a></li>
+<li><a href="#/void-functions-non-value-returning-functions" id="/toc-void-functions-non-value-returning-functions">Void functions (non-value returning functions)</a></li>
+<li><a href="#/introduction-to-function-parameters-and-arguments" id="/toc-introduction-to-function-parameters-and-arguments">Introduction to function parameters and arguments</a></li>
+<li><a href="#/introduction-to-local-scope" id="/toc-introduction-to-local-scope">Introduction to local scope</a></li>
+<li><a href="#/forward-declarations-and-definitions" id="/toc-forward-declarations-and-definitions">Forward declarations and definitions</a></li>
+<li><a href="#/programs-with-multiple-code-files" id="/toc-programs-with-multiple-code-files">Programs with multiple code files</a></li>
+<li><a href="#/header-files" id="/toc-header-files">Header files</a></li>
+<li><a href="#/whats-next-after-this-chapter" id="/toc-whats-next-after-this-chapter">What’s next after this chapter</a></li>
+</ul>
+</nav>
+</section>
+<section>
+<section id="basic-syntax" class="title-slide slide level1 center">
+<h1>Basic Syntax</h1>
+
+</section>
+<section id="an-example-of-a-user-defined-function" class="slide level2">
+<h2>An example of a user-defined function</h2>
+<p>The most basic syntax to define a user-defined function</p>
+<div id="lst-most-basic-syntax" class="cpp listing quarto-float quarto-figure quarto-figure-left" data-filename="`function_basic_syntax.cpp`">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-most-basic-syntax-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;1: Most basic syntax to define a user-defined function.
+</figcaption>
+<div aria-describedby="lst-most-basic-syntax-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>function_basic_syntax.cpp</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-filename="function_basic_syntax.cpp"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb1-1"><a href=""></a><span class="dt">return_type</span> function_name<span class="op">()</span> <span class="co">// This is the function header </span></span>
+<span id="cb1-2"><a href=""></a>                            <span class="co">// (tells the compiler about the existence</span></span>
+<span id="cb1-3"><a href=""></a>                            <span class="co">//  of the function)</span></span>
+<span id="cb1-4"><a href=""></a><span class="op">{</span></span>
+<span id="cb1-5"><a href=""></a>    <span class="co">// This is the function body </span></span>
+<span id="cb1-6"><a href=""></a>    <span class="co">// (tells the compiler what the function does)</span></span>
+<span id="cb1-7"><a href=""></a><span class="op">}</span></span>
+<span id="cb1-8"><a href=""></a><span class="co">// This file is not compilable as it has no main() function</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</figure>
+</div>
+<ul>
+<li>The <code>function_name</code> is the name (identifier) of your user-defined function.</li>
+<li>The parentheses after the identifier tell the compiler that we’re defining a function.</li>
+</ul>
+</section>
+<section id="define-a-function-and-call-the-function" class="slide level2">
+<h2>Define a function and call the function</h2>
+<ul>
+<li>Of course, after defining the function, we can call it multiple times.</li>
+</ul>
+<div id="lst-call-funcion" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-call-funcion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;2: Define function and call function. Filename: <code>call_function.cpp</code>
+</figcaption>
+<div aria-describedby="lst-call-funcion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb2-1"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span><span class="pp"> </span><span class="co">// for std::cout</span></span>
+<span id="cb2-2"><a href=""></a></span>
+<span id="cb2-3"><a href=""></a><span class="dt">void</span> say_hello<span class="op">()</span>    <span class="co">// user-defined function</span></span>
+<span id="cb2-4"><a href=""></a><span class="op">{</span></span>
+<span id="cb2-5"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"In say_hello(): Hello there!</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb2-6"><a href=""></a><span class="op">}</span></span>
+<span id="cb2-7"><a href=""></a></span>
+<span id="cb2-8"><a href=""></a><span class="dt">int</span> main<span class="op">()</span>          <span class="co">// Definition of function main()</span></span>
+<span id="cb2-9"><a href=""></a><span class="op">{</span></span>
+<span id="cb2-10"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Starting main()</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb2-11"><a href=""></a>    say_hello<span class="op">();</span> <span class="co">// say_hello() called for the first time</span></span>
+<span id="cb2-12"><a href=""></a>    say_hello<span class="op">();</span> <span class="co">// say_hello() called for the second time</span></span>
+<span id="cb2-13"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Ending main()</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb2-14"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb2-15"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section>
+<section id="functions-can-call-functions-that-call-other-functions" class="slide level2">
+<h2>Functions can call functions that call other functions</h2>
+<div id="lst-function-call-function" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-function-call-function-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;3: Function can call other functions
+</figcaption>
+<div aria-describedby="lst-function-call-function-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb3-1"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span><span class="pp"> </span><span class="co">// for std::cout</span></span>
+<span id="cb3-2"><a href=""></a><span class="dt">void</span> do_thing_B<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb3-3"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"In do_thing_B()</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb3-4"><a href=""></a><span class="op">}</span></span>
+<span id="cb3-5"><a href=""></a><span class="dt">void</span> do_thing_A<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb3-6"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Starting do_thing_A()</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb3-7"><a href=""></a>    do_thing_B<span class="op">();</span></span>
+<span id="cb3-8"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Ending do_thing_A()</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb3-9"><a href=""></a><span class="op">}</span></span>
+<span id="cb3-10"><a href=""></a><span class="co">// Definition of function main()</span></span>
+<span id="cb3-11"><a href=""></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb3-12"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Starting main()</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb3-13"><a href=""></a>    do_thing_A<span class="op">();</span></span>
+<span id="cb3-14"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Ending main()</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb3-15"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb3-16"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section>
+<section id="nested-functions-are-not-supported" class="slide level2">
+<h2>Nested functions are not supported</h2>
+<ul>
+<li>A function whose definition is placed inside another function is a <strong>nested function</strong>.</li>
+<li>Unlike Python and MATLAB, functions cannot be nested in C++.</li>
+</ul>
+<p>The following program is <strong>not legal</strong>:</p>
+<div id="lst-nested-function" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-nested-function-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;4: Function can call other functions
+</figcaption>
+<div aria-describedby="lst-nested-function-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb4-1"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb4-2"><a href=""></a></span>
+<span id="cb4-3"><a href=""></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb4-4"><a href=""></a><span class="op">{</span></span>
+<span id="cb4-5"><a href=""></a>    <span class="dt">void</span> foo<span class="op">()</span> <span class="co">// Illegal: this function is nested inside function main()</span></span>
+<span id="cb4-6"><a href=""></a>    <span class="op">{</span></span>
+<span id="cb4-7"><a href=""></a>        <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"foo!</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb4-8"><a href=""></a>    <span class="op">}</span></span>
+<span id="cb4-9"><a href=""></a>    foo<span class="op">();</span> <span class="co">// function call to foo()</span></span>
+<span id="cb4-10"><a href=""></a>    <span class="co">// "foo" is a meaningless word that is often used </span></span>
+<span id="cb4-11"><a href=""></a>    <span class="co">// as a placeholder name for a function or variable </span></span>
+<span id="cb4-12"><a href=""></a>    <span class="co">// when the name is unimportant to the demonstration    </span></span>
+<span id="cb4-13"><a href=""></a>    <span class="co">// of some concept. </span></span>
+<span id="cb4-14"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb4-15"><a href=""></a><span class="op">}</span></span>
+<span id="cb4-16"><a href=""></a><span class="co">// Note: The above code will not compile because C++ </span></span>
+<span id="cb4-17"><a href=""></a><span class="co">// does not allow nested functions.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section></section>
+<section>
+<section id="function-retrun-values-value-returning-functions" class="title-slide slide level1 center">
+<h1>Function retrun values (value-returning functions)</h1>
+
+</section>
+<section id="return-values" class="slide level2">
+<h2>Return values</h2>
+<p>When we write a user-defined function, we get to determine whether the function will return a value back to the caller or not.</p>
+<ul>
+<li>Indicate what type of value will be returnd (<strong>return type</strong>)</li>
+<li>Use a <strong>return statement</strong> to indicate the specific value being returned to the caller.</li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb5-1"><a href=""></a><span class="dt">return_type</span> function_name<span class="op">()</span></span>
+<span id="cb5-2"><a href=""></a><span class="op">{</span>   </span>
+<span id="cb5-3"><a href=""></a>    <span class="co">// function body</span></span>
+<span id="cb5-4"><a href=""></a>    <span class="cf">return</span> return_expression<span class="op">;</span></span>
+<span id="cb5-5"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>When the return statement is executed:</p>
+<ol type="1">
+<li>The <strong>return expression</strong> is evaluated to produce a value.</li>
+<li>The value produced by the return expression is copied back to the caller. This copy is called the <strong>return value</strong> of the function.</li>
+<li>The function exits, and control returns to the caller.</li>
+</ol>
+<p><strong>Summary</strong></p>
+<p>The <strong>return expression</strong> produces the value to be returned. The return value is a copy of that value.</p>
+</section>
+<section id="return-values-code-demonstration" class="slide level2">
+<h2>Return values: Code Demonstration</h2>
+<div id="lst-return-value" class="cpp listing quarto-float quarto-figure quarto-figure-left" data-filename="return_value.cpp">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-return-value-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;5: Return value in a function
+</figcaption>
+<div aria-describedby="lst-return-value-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>return_value.cpp</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" data-filename="return_value.cpp"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb6-1"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb6-2"><a href=""></a></span>
+<span id="cb6-3"><a href=""></a><span class="dt">int</span> get_value_from_user<span class="op">()</span> <span class="co">// this function now returns an integer value</span></span>
+<span id="cb6-4"><a href=""></a><span class="op">{</span></span>
+<span id="cb6-5"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Enter an integer: "</span><span class="op">;</span></span>
+<span id="cb6-6"><a href=""></a>    <span class="dt">int</span> input<span class="op">{};</span></span>
+<span id="cb6-7"><a href=""></a>    <span class="bu">std::</span>cin <span class="op">&gt;&gt;</span> input<span class="op">;</span></span>
+<span id="cb6-8"><a href=""></a></span>
+<span id="cb6-9"><a href=""></a>    <span class="cf">return</span> input<span class="op">;</span> <span class="co">// return the value the user entered back to the caller</span></span>
+<span id="cb6-10"><a href=""></a><span class="op">}</span></span>
+<span id="cb6-11"><a href=""></a></span>
+<span id="cb6-12"><a href=""></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb6-13"><a href=""></a><span class="op">{</span></span>
+<span id="cb6-14"><a href=""></a>    <span class="co">// initialize num with the return value of get_value_from_user()</span></span>
+<span id="cb6-15"><a href=""></a>    <span class="dt">int</span> num <span class="op">{</span> get_value_from_user<span class="op">()</span> <span class="op">};</span> </span>
+<span id="cb6-16"><a href=""></a>    </span>
+<span id="cb6-17"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> num <span class="op">&lt;&lt;</span> <span class="st">" doubled is: "</span> <span class="op">&lt;&lt;</span> num <span class="op">*</span> <span class="dv">2</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
+<span id="cb6-18"><a href=""></a></span>
+<span id="cb6-19"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb6-20"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</figure>
+</div>
+</section>
+<section id="revisiting-main" class="slide level2">
+<h2>Revisiting <code>main()</code></h2>
+<p>In C++, there are two special requirements for main():</p>
+<ul>
+<li><code>main()</code> is required to return an <code>int</code>.</li>
+<li>Explicit function calls to <code>main()</code> are disallowed.</li>
+</ul>
+<div id="lst-revisit-main" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-revisit-main-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;6: This program will produce compile error!!!
+</figcaption>
+<div aria-describedby="lst-revisit-main-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb7-1"><a href=""></a><span class="dt">void</span> foo<span class="op">()</span></span>
+<span id="cb7-2"><a href=""></a><span class="op">{</span></span>
+<span id="cb7-3"><a href=""></a>    main<span class="op">();</span> <span class="co">// Compile error: main not allowed to be called explicitly</span></span>
+<span id="cb7-4"><a href=""></a><span class="op">}</span></span>
+<span id="cb7-5"><a href=""></a></span>
+<span id="cb7-6"><a href=""></a><span class="dt">void</span> main<span class="op">()</span> <span class="co">// Compile error: main not allowed to have non-int return type</span></span>
+<span id="cb7-7"><a href=""></a><span class="op">{</span></span>
+<span id="cb7-8"><a href=""></a>    foo<span class="op">();</span></span>
+<span id="cb7-9"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section>
+<section id="functions-can-only-return-a-single-value" class="slide level2">
+<h2>Functions can only return a single value</h2>
+<ul>
+<li>A value-returning function can only return a single value back to the caller each time it is called.</li>
+<li>There are various ways to work around the limitation of functions only being able to return a single value, which we’ll cover in future lessons.</li>
+</ul>
+</section>
+<section id="dont-repeat-yourself-dry" class="slide level2">
+<h2>Don’t Repeat Yourself (DRY)</h2>
+<p><em>Golden Rule</em><br>
+<strong>Don’t Repeat Yourself</strong> (DRY)</p>
+<div id="lst-violate-DRY" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-violate-DRY-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;7: This program violates Don’t Repeat Yourself and can be rewritten
+</figcaption>
+<div aria-describedby="lst-violate-DRY-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb8-1"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb8-2"><a href=""></a></span>
+<span id="cb8-3"><a href=""></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb8-4"><a href=""></a><span class="op">{</span></span>
+<span id="cb8-5"><a href=""></a>    <span class="dt">int</span> x<span class="op">{};</span></span>
+<span id="cb8-6"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Enter an integer: "</span><span class="op">;</span></span>
+<span id="cb8-7"><a href=""></a>    <span class="bu">std::</span>cin <span class="op">&gt;&gt;</span> x<span class="op">;</span></span>
+<span id="cb8-8"><a href=""></a>    <span class="dt">int</span> y<span class="op">{};</span></span>
+<span id="cb8-9"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Enter an integer: "</span><span class="op">;</span></span>
+<span id="cb8-10"><a href=""></a>    <span class="bu">std::</span>cin <span class="op">&gt;&gt;</span> y<span class="op">;</span></span>
+<span id="cb8-11"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> x <span class="op">&lt;&lt;</span> <span class="st">" + "</span> <span class="op">&lt;&lt;</span> y <span class="op">&lt;&lt;</span> <span class="st">" = "</span> <span class="op">&lt;&lt;</span> x <span class="op">+</span> y <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
+<span id="cb8-12"><a href=""></a></span>
+<span id="cb8-13"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb8-14"><a href=""></a><span class="op">}</span></span>
+<span id="cb8-15"><a href=""></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section>
+<section id="dont-repeat-yourself-dry-1" class="slide level2">
+<h2>Don’t Repeat Yourself (DRY)</h2>
+<p>We can rewrite the above by define a function and reuse the function multiple times.</p>
+<div id="lst-DRY" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-DRY-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;8: Rewrite the above program to conform with DRY
+</figcaption>
+<div aria-describedby="lst-DRY-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb9-1"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb9-2"><a href=""></a></span>
+<span id="cb9-3"><a href=""></a><span class="dt">int</span> get_value_from_user<span class="op">()</span></span>
+<span id="cb9-4"><a href=""></a><span class="op">{</span></span>
+<span id="cb9-5"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Enter an integer: "</span><span class="op">;</span></span>
+<span id="cb9-6"><a href=""></a>    <span class="dt">int</span> input<span class="op">{};</span></span>
+<span id="cb9-7"><a href=""></a>    <span class="bu">std::</span>cin <span class="op">&gt;&gt;</span> input<span class="op">;</span></span>
+<span id="cb9-8"><a href=""></a></span>
+<span id="cb9-9"><a href=""></a>    <span class="cf">return</span> input<span class="op">;</span></span>
+<span id="cb9-10"><a href=""></a><span class="op">}</span></span>
+<span id="cb9-11"><a href=""></a></span>
+<span id="cb9-12"><a href=""></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb9-13"><a href=""></a><span class="op">{</span></span>
+<span id="cb9-14"><a href=""></a>    <span class="dt">int</span> x<span class="op">{</span> get_value_from_user<span class="op">()</span> <span class="op">};</span> <span class="co">// first call to get_value_from_user</span></span>
+<span id="cb9-15"><a href=""></a>    <span class="dt">int</span> y<span class="op">{</span> get_value_from_user<span class="op">()</span> <span class="op">};</span> <span class="co">// second call to get_value_from_user</span></span>
+<span id="cb9-16"><a href=""></a></span>
+<span id="cb9-17"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> x <span class="op">&lt;&lt;</span> <span class="st">" + "</span> <span class="op">&lt;&lt;</span> y <span class="op">&lt;&lt;</span> <span class="st">" = "</span> <span class="op">&lt;&lt;</span> x <span class="op">+</span> y <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
+<span id="cb9-18"><a href=""></a></span>
+<span id="cb9-19"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb9-20"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section></section>
+<section>
+<section id="void-functions-non-value-returning-functions" class="title-slide slide level1 center">
+<h1>Void functions (non-value returning functions)</h1>
+
+</section>
+<section id="void-return-values" class="slide level2">
+<h2>Void return values</h2>
+<p>To tell the compiler that a function does not return a value, a return type of <code>void</code> is used.</p>
+<div id="lst-return-void" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-return-void-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;9: non-value returning functions return void
+</figcaption>
+<div aria-describedby="lst-return-void-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb10-1"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb10-2"><a href=""></a><span class="pp">#include </span><span class="im">&lt;string&gt;</span><span class="pp">       </span><span class="co">// to use std::string</span></span>
+<span id="cb10-3"><a href=""></a><span class="co">// void means the function does not return a value to the caller</span></span>
+<span id="cb10-4"><a href=""></a><span class="dt">void</span> hi_somebody<span class="op">(</span><span class="bu">std::</span>string name<span class="op">)</span></span>
+<span id="cb10-5"><a href=""></a><span class="op">{</span></span>
+<span id="cb10-6"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Hi "</span> <span class="op">&lt;&lt;</span> name <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
+<span id="cb10-7"><a href=""></a></span>
+<span id="cb10-8"><a href=""></a>    <span class="co">// This function does not return a value so no return statement is needed</span></span>
+<span id="cb10-9"><a href=""></a><span class="op">}</span></span>
+<span id="cb10-10"><a href=""></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb10-11"><a href=""></a><span class="op">{</span></span>
+<span id="cb10-12"><a href=""></a>    hi_somebody<span class="op">(</span><span class="st">"Alice"</span><span class="op">);</span> <span class="co">// function hi_somebody() is called, no value is returned</span></span>
+<span id="cb10-13"><a href=""></a>    hi_somebody<span class="op">(</span><span class="st">"Catherine"</span><span class="op">);</span></span>
+<span id="cb10-14"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb10-15"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section>
+<section id="void-functions-do-not-need-a-return-statement" class="slide level2">
+<h2>Void functions do not need a return statement</h2>
+<ul>
+<li>A void function will automatically return to the caller at the end of the function. No return statement is required.</li>
+<li>A return statement (with no return value) can be used in a void function – such a statement will cause the function to return to the caller at the point where the return statement is executed.</li>
+<li>Consequently, putting an empty return statement at the end of a void function is redundant.</li>
+</ul>
+<div id="lst-void-return" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-void-return-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;10: <strong>return</strong> in a void function will cause the function to return to the caller
+</figcaption>
+<div aria-describedby="lst-void-return-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb11-1"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb11-2"><a href=""></a><span class="dt">void</span> say_hi<span class="op">()</span>   <span class="co">// void means the function does not return a value to the caller</span></span>
+<span id="cb11-3"><a href=""></a><span class="op">{</span></span>
+<span id="cb11-4"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Hi"</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
+<span id="cb11-5"><a href=""></a>    <span class="cf">return</span><span class="op">;</span> <span class="co">// tell compiler to return to the caller </span></span>
+<span id="cb11-6"><a href=""></a>    <span class="co">/* this is redundant since the return will happen </span></span>
+<span id="cb11-7"><a href=""></a><span class="co">       at the end of the function anyway! */</span></span>
+<span id="cb11-8"><a href=""></a><span class="op">}</span>   <span class="co">// function will return to caller here</span></span>
+<span id="cb11-9"><a href=""></a></span>
+<span id="cb11-10"><a href=""></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb11-11"><a href=""></a><span class="op">{</span></span>
+<span id="cb11-12"><a href=""></a>    say_hi<span class="op">();</span></span>
+<span id="cb11-13"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb11-14"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section>
+<section id="returning-a-value-from-a-void-function-is-a-compile-error" class="slide level2">
+<h2>Returning a value from a void function is a compile error</h2>
+<ul>
+<li>Obviously, trying to return a value from a non-value returning function will result in a compilation error.</li>
+<li>This needs no explanation, just common sense.</li>
+</ul>
+<div id="lst-return-value-in-void" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-return-value-in-void-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;11: Returning a value from a void function will result in a compilation error
+</figcaption>
+<div aria-describedby="lst-return-value-in-void-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb12-1"><a href=""></a><span class="dt">void</span> say_hi<span class="op">()</span> <span class="co">// This function is non-value returning</span></span>
+<span id="cb12-2"><a href=""></a><span class="op">{</span></span>
+<span id="cb12-3"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"In say_hi()"</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
+<span id="cb12-4"><a href=""></a></span>
+<span id="cb12-5"><a href=""></a>    <span class="cf">return</span> <span class="dv">5</span><span class="op">;</span> <span class="co">// compile error: we're trying to return a value</span></span>
+<span id="cb12-6"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section></section>
+<section>
+<section id="introduction-to-function-parameters-and-arguments" class="title-slide slide level1 center">
+<h1>Introduction to function parameters and arguments</h1>
+
+</section>
+<section id="function-parameters-and-arguments" class="slide level2">
+<h2>Function parameters and arguments</h2>
+<h3 id="function-parameter">Function parameter</h3>
+<ul>
+<li>A <strong>function parameter</strong> is a variable used in the header of a function.</li>
+<li>Function parameters work almost identically to variables defined inside the function, but with one difference.</li>
+<li>Function parameters are initialized with a value provided by the caller of the function.</li>
+</ul>
+<h3 id="argument">Argument</h3>
+<p>An argument is a value that is passed from the caller to the function when a function call is made.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb13-1"><a href=""></a>say_hello<span class="op">();</span>            <span class="co">// this call has no arguments</span></span>
+<span id="cb13-2"><a href=""></a>print_value<span class="op">(</span><span class="dv">6</span><span class="op">);</span>         <span class="co">// 6 is the argument passed to function printValue()</span></span>
+<span id="cb13-3"><a href=""></a>add<span class="op">(</span><span class="fl">2.0</span><span class="op">,</span> <span class="fl">3.0</span><span class="op">);</span>          <span class="co">// 2.0 and 3.0 are the arguments passed to function add()</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="function-parameters-examples" class="slide level2">
+<h2>Function parameters: Examples</h2>
+<div id="lst-function-parameters" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-function-parameters-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;12: Different functions with different number of parameters
+</figcaption>
+<div aria-describedby="lst-function-parameters-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb14-1"><a href=""></a><span class="co">// This function takes no parameters</span></span>
+<span id="cb14-2"><a href=""></a><span class="co">// It does not rely on the caller for anything</span></span>
+<span id="cb14-3"><a href=""></a><span class="dt">void</span> say_hello<span class="op">()</span></span>
+<span id="cb14-4"><a href=""></a><span class="op">{</span></span>
+<span id="cb14-5"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Hello World</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb14-6"><a href=""></a><span class="op">}</span></span>
+<span id="cb14-7"><a href=""></a><span class="co">// This function takes one integer parameter named x</span></span>
+<span id="cb14-8"><a href=""></a><span class="co">// The caller will supply the value of x</span></span>
+<span id="cb14-9"><a href=""></a><span class="dt">void</span> print_value<span class="op">(</span><span class="dt">double</span> x<span class="op">)</span></span>
+<span id="cb14-10"><a href=""></a><span class="op">{</span></span>
+<span id="cb14-11"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> x <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
+<span id="cb14-12"><a href=""></a><span class="op">}</span></span>
+<span id="cb14-13"><a href=""></a><span class="co">// This function has two integer parameters, one named x, and one named y</span></span>
+<span id="cb14-14"><a href=""></a><span class="co">// The caller will supply the value of both x and y</span></span>
+<span id="cb14-15"><a href=""></a><span class="dt">int</span> add<span class="op">(</span><span class="dt">double</span> x<span class="op">,</span> <span class="dt">double</span> y<span class="op">)</span></span>
+<span id="cb14-16"><a href=""></a><span class="op">{</span></span>
+<span id="cb14-17"><a href=""></a>    <span class="cf">return</span> x <span class="op">+</span> y<span class="op">;</span></span>
+<span id="cb14-18"><a href=""></a><span class="op">}</span></span>
+<span id="cb14-19"><a href=""></a><span class="co">/* This code snippet cannot be compiled. */</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section>
+<section id="how-parameters-and-arguments-work-toghether" class="slide level2">
+<h2>How parameters and arguments work toghether</h2>
+<ul>
+<li>When a function is called, all of the parameters of the function are created as variables.</li>
+<li>The value of each of the arguments is copied into the matching parameter (using copy initialization).</li>
+<li>This process is called <strong>pass by value</strong>.</li>
+<li>Function parameters that utilize <em>pass by value</em> are called <strong>value parameters</strong>.</li>
+</ul>
+</section>
+<section id="call-a-function-with-the-process-of-pass-by-value" class="slide level2">
+<h2>Call a function with the process of pass-by-value</h2>
+<div id="lst-pass-by-value" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-pass-by-value-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;13: Call a function by using the process <strong>pass by value</strong>
+</figcaption>
+<div aria-describedby="lst-pass-by-value-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb15-1"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb15-2"><a href=""></a></span>
+<span id="cb15-3"><a href=""></a><span class="co">// This function has two integer parameters, one named x, and one named y</span></span>
+<span id="cb15-4"><a href=""></a><span class="co">// The values of x and y are passed in by the caller</span></span>
+<span id="cb15-5"><a href=""></a><span class="dt">void</span> print_two_values<span class="op">(</span><span class="dt">int</span> x<span class="op">,</span> <span class="dt">int</span> y<span class="op">)</span></span>
+<span id="cb15-6"><a href=""></a><span class="op">{</span></span>
+<span id="cb15-7"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> x <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
+<span id="cb15-8"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> y <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
+<span id="cb15-9"><a href=""></a><span class="op">}</span></span>
+<span id="cb15-10"><a href=""></a></span>
+<span id="cb15-11"><a href=""></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb15-12"><a href=""></a><span class="op">{</span></span>
+<span id="cb15-13"><a href=""></a>    print_two_values<span class="op">(</span><span class="dv">6</span><span class="op">,</span> <span class="dv">7</span><span class="op">);</span> <span class="co">// This function call has two arguments, 6 and 7</span></span>
+<span id="cb15-14"><a href=""></a></span>
+<span id="cb15-15"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb15-16"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section>
+<section id="call-a-function-with-the-process-of-pass-by-value-1" class="slide level2">
+<h2>Call a function with the process of pass-by-value</h2>
+<div id="lst-double-number" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-double-number-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;14: Combine what we have learned so far to write a stupid program
+</figcaption>
+<div aria-describedby="lst-double-number-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb16-1"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb16-2"><a href=""></a></span>
+<span id="cb16-3"><a href=""></a><span class="dt">int</span> get_value_from_user<span class="op">()</span></span>
+<span id="cb16-4"><a href=""></a><span class="op">{</span></span>
+<span id="cb16-5"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Enter an integer: "</span><span class="op">;</span></span>
+<span id="cb16-6"><a href=""></a>    <span class="dt">int</span> input<span class="op">{};</span></span>
+<span id="cb16-7"><a href=""></a>    <span class="bu">std::</span>cin <span class="op">&gt;&gt;</span> input<span class="op">;</span></span>
+<span id="cb16-8"><a href=""></a></span>
+<span id="cb16-9"><a href=""></a>    <span class="cf">return</span> input<span class="op">;</span></span>
+<span id="cb16-10"><a href=""></a><span class="op">}</span></span>
+<span id="cb16-11"><a href=""></a></span>
+<span id="cb16-12"><a href=""></a><span class="dt">void</span> print_double<span class="op">(</span><span class="dt">int</span> value<span class="op">)</span> <span class="co">// This function now has an integer parameter</span></span>
+<span id="cb16-13"><a href=""></a><span class="op">{</span></span>
+<span id="cb16-14"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> value <span class="op">&lt;&lt;</span> <span class="st">" doubled is: "</span> <span class="op">&lt;&lt;</span> value <span class="op">*</span> <span class="dv">2</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
+<span id="cb16-15"><a href=""></a><span class="op">}</span></span>
+<span id="cb16-16"><a href=""></a></span>
+<span id="cb16-17"><a href=""></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb16-18"><a href=""></a><span class="op">{</span></span>
+<span id="cb16-19"><a href=""></a>    <span class="dt">int</span> num <span class="op">{</span> get_value_from_user<span class="op">()</span> <span class="op">};</span></span>
+<span id="cb16-20"><a href=""></a>    print_double<span class="op">(</span>num<span class="op">);</span></span>
+<span id="cb16-21"><a href=""></a></span>
+<span id="cb16-22"><a href=""></a>    <span class="co">// We can also combine two statements into one.</span></span>
+<span id="cb16-23"><a href=""></a>    print_double<span class="op">(</span>get_value_from_user<span class="op">());</span></span>
+<span id="cb16-24"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb16-25"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section>
+<section id="call-a-function-with-the-process-of-pass-by-value-more-examples" class="slide level2">
+<h2>Call a function with the process of pass-by-value: More examples</h2>
+<div id="lst-pass-by-value-more" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-pass-by-value-more-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;15: Call a function by using the process <strong>pass by value</strong>: More examples
+</figcaption>
+<div aria-describedby="lst-pass-by-value-more-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb17-1"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb17-2"><a href=""></a></span>
+<span id="cb17-3"><a href=""></a><span class="dt">int</span> add<span class="op">(</span><span class="dt">int</span> x<span class="op">,</span> <span class="dt">int</span> y<span class="op">)</span></span>
+<span id="cb17-4"><a href=""></a><span class="op">{</span></span>
+<span id="cb17-5"><a href=""></a>    <span class="cf">return</span> x <span class="op">+</span> y<span class="op">;</span></span>
+<span id="cb17-6"><a href=""></a><span class="op">}</span></span>
+<span id="cb17-7"><a href=""></a></span>
+<span id="cb17-8"><a href=""></a><span class="dt">int</span> multiply<span class="op">(</span><span class="dt">int</span> z<span class="op">,</span> <span class="dt">int</span> w<span class="op">)</span></span>
+<span id="cb17-9"><a href=""></a><span class="op">{</span></span>
+<span id="cb17-10"><a href=""></a>    <span class="cf">return</span> z <span class="op">*</span> w<span class="op">;</span></span>
+<span id="cb17-11"><a href=""></a><span class="op">}</span></span>
+<span id="cb17-12"><a href=""></a></span>
+<span id="cb17-13"><a href=""></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb17-14"><a href=""></a><span class="op">{</span></span>
+<span id="cb17-15"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> add<span class="op">(</span><span class="dv">4</span><span class="op">,</span> <span class="dv">5</span><span class="op">)</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span>         <span class="co">// within add() x=4, y=5, so x+y=9</span></span>
+<span id="cb17-16"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> add<span class="op">(</span><span class="dv">1</span> <span class="op">+</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span> <span class="op">*</span> <span class="dv">4</span><span class="op">)</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span> <span class="co">// within add() x=3, y=12, so x+y=15</span></span>
+<span id="cb17-17"><a href=""></a></span>
+<span id="cb17-18"><a href=""></a>    <span class="dt">int</span> a<span class="op">{</span> <span class="dv">5</span> <span class="op">};</span></span>
+<span id="cb17-19"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> add<span class="op">(</span>a<span class="op">,</span> a<span class="op">)</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span>         <span class="co">// evaluates (5 + 5)</span></span>
+<span id="cb17-20"><a href=""></a></span>
+<span id="cb17-21"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> add<span class="op">(</span><span class="dv">1</span><span class="op">,</span> multiply<span class="op">(</span><span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">))</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span>    <span class="co">// evaluates 1 + (2 * 3)</span></span>
+<span id="cb17-22"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> add<span class="op">(</span><span class="dv">1</span><span class="op">,</span> add<span class="op">(</span><span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">))</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span>         <span class="co">// evaluates 1 + (2 + 3)</span></span>
+<span id="cb17-23"><a href=""></a></span>
+<span id="cb17-24"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb17-25"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section></section>
+<section>
+<section id="introduction-to-local-scope" class="title-slide slide level1 center">
+<h1>Introduction to local scope</h1>
+
+</section>
+<section id="local-variables" class="slide level2">
+<h2>Local variables</h2>
+<ul>
+<li>Variables defined inside the body of a function are called local variables.</li>
+<li>Function parameters are also generally considered to be local variables.</li>
+</ul>
+<div id="lst-local-variables" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-local-variables-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;16: Local variables
+</figcaption>
+<div aria-describedby="lst-local-variables-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb18-1"><a href=""></a><span class="dt">int</span> add<span class="op">(</span><span class="dt">int</span> x<span class="op">,</span> <span class="dt">int</span> y<span class="op">)</span> <span class="co">// function parameters x and y are local variables</span></span>
+<span id="cb18-2"><a href=""></a><span class="op">{</span></span>
+<span id="cb18-3"><a href=""></a>    <span class="dt">int</span> z<span class="op">{</span> x <span class="op">+</span> y <span class="op">};</span>         <span class="co">// z is a local variable</span></span>
+<span id="cb18-4"><a href=""></a></span>
+<span id="cb18-5"><a href=""></a>    <span class="cf">return</span> z<span class="op">;</span></span>
+<span id="cb18-6"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section>
+<section id="local-variable-lifetime" class="slide level2">
+<h2>Local variable lifetime</h2>
+<ul>
+<li>Function parameters are created and initialized when the function is entered, and variables within the function body are created and initialized at the point of definition.</li>
+<li>The natural follow-up question is, “So when is an instantiated variable destroyed?”.</li>
+</ul>
+<p><strong>Answer</strong></p>
+<blockquote>
+<p>Local variables are destroyed in the opposite order of creation at the end of the set of curly braces in which it is defined (or for a function parameter, at the end of the function).</p>
+</blockquote>
+<div id="lst-local-var-lifetime" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-local-var-lifetime-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;17: Lifetime of local variables
+</figcaption>
+<div aria-describedby="lst-local-var-lifetime-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb19-1"><a href=""></a><span class="dt">double</span> add<span class="op">(</span><span class="dt">double</span> x<span class="op">,</span> <span class="dt">double</span> y<span class="op">)</span>       <span class="co">// x and y created and initialized here</span></span>
+<span id="cb19-2"><a href=""></a><span class="op">{</span></span>
+<span id="cb19-3"><a href=""></a>    <span class="dt">double</span> z<span class="op">{</span> x <span class="op">+</span> y <span class="op">};</span>         <span class="co">// z created and initialized here</span></span>
+<span id="cb19-4"><a href=""></a></span>
+<span id="cb19-5"><a href=""></a>    <span class="cf">return</span> z<span class="op">;</span></span>
+<span id="cb19-6"><a href=""></a><span class="op">}</span> <span class="co">// z, y, and x destroyed here</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section>
+<section id="local-variable-lifetime-example" class="slide level2">
+<h2>Local variable lifetime: Example</h2>
+<div id="lst-local-var-lifetime-ex" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-local-var-lifetime-ex-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;18: Local variable lifetime: Example
+</figcaption>
+<div aria-describedby="lst-local-var-lifetime-ex-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb20-1"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb20-2"><a href=""></a><span class="pp">#include </span><span class="im">&lt;string&gt;</span></span>
+<span id="cb20-3"><a href=""></a></span>
+<span id="cb20-4"><a href=""></a><span class="co">// my_name is not in scope anywhere in this function</span></span>
+<span id="cb20-5"><a href=""></a><span class="dt">void</span> say_hello<span class="op">(</span><span class="bu">std::</span>string name<span class="op">)</span></span>
+<span id="cb20-6"><a href=""></a><span class="op">{</span></span>
+<span id="cb20-7"><a href=""></a>    <span class="co">// name's lifetime begins here</span></span>
+<span id="cb20-8"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Hello, "</span> <span class="op">&lt;&lt;</span> name <span class="op">&lt;&lt;</span> <span class="st">"!</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb20-9"><a href=""></a><span class="op">}</span>   <span class="co">// name's lifetime ends here</span></span>
+<span id="cb20-10"><a href=""></a></span>
+<span id="cb20-11"><a href=""></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb20-12"><a href=""></a><span class="op">{</span></span>
+<span id="cb20-13"><a href=""></a>    <span class="bu">std::</span>string my_name <span class="op">{</span> <span class="st">"Khiem"</span> <span class="op">};</span>    <span class="co">// my_name's lifetime begins here</span></span>
+<span id="cb20-14"><a href=""></a></span>
+<span id="cb20-15"><a href=""></a>    say_hello<span class="op">(</span>my_name<span class="op">);</span> <span class="co">// my_name is still alive during this function call</span></span>
+<span id="cb20-16"><a href=""></a></span>
+<span id="cb20-17"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb20-18"><a href=""></a><span class="op">}</span>       <span class="co">// my_name's lifetime ends here</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section>
+<section id="what-happens-when-an-object-is-destroyed" class="slide level2">
+<h2>What happens when an object is destroyed?</h2>
+<ul>
+<li>In most cases, nothing happens. The destroyed object simply becomes invalid.</li>
+<li>At some point after destruction, the memory used by the object will be deallocated (freed up for reuse).</li>
+</ul>
+<h3 id="destructor">Destructor</h3>
+<ul>
+<li>If the object is a class type object, prior to destruction, a special function called a destructor is invoked.</li>
+<li>We study destructors when we study “<strong>Object-oriented Programming</strong>” (<strong>OOP</strong>).</li>
+</ul>
+</section>
+<section id="local-scope-block-scope" class="slide level2">
+<h2>Local scope (block scope)</h2>
+<div class="fragment">
+<h3 id="scope">Scope</h3>
+<ul>
+<li class="fragment">An identifier’s <strong>scope</strong> determines where the identifier can be seen and used within the source code.</li>
+<li class="fragment">When an identifier can be seen and used, we say it is in <strong>scope</strong>.</li>
+<li class="fragment">When an identifier can not be seen, we can not use it, and we say it is <strong>out of scope</strong>.</li>
+</ul>
+</div>
+<div class="fragment">
+<h3 id="local-scope">Local scope</h3>
+<ul>
+<li class="fragment">The identifier of a local variable has <strong>local scope</strong>.</li>
+<li class="fragment">An identifier with local scope (technically called block scope) is usable from the point of definition to the end of the innermost pair of curly braces containing the identifier (or for function parameters, at the end of the function).</li>
+</ul>
+</div>
+<div class="fragment">
+<blockquote>
+<p><strong>Scope is a compile-time property</strong>, and trying to use an identifier when it is not in scope will result in a compile error.</p>
+</blockquote>
+</div>
+</section>
+<section id="local-scope-example-01" class="slide level2">
+<h2>Local scope: Example 01</h2>
+<p>This program compiles fine and outputs what we expected.</p>
+<div id="lst-local-scope-01" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-local-scope-01-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;19: Local scope: Example 01
+</figcaption>
+<div aria-describedby="lst-local-scope-01-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb21-1"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb21-2"><a href=""></a></span>
+<span id="cb21-3"><a href=""></a><span class="co">// x is not in scope anywhere in this function</span></span>
+<span id="cb21-4"><a href=""></a><span class="dt">void</span> do_useless_thing<span class="op">(</span><span class="dt">double</span> number <span class="op">=</span> <span class="fl">0.0</span><span class="op">)</span></span>
+<span id="cb21-5"><a href=""></a><span class="op">{</span></span>
+<span id="cb21-6"><a href=""></a>    <span class="dt">int</span> x<span class="op">{</span> <span class="dv">42</span> <span class="op">};</span> <span class="co">// x enters scope here and can be used within this function</span></span>
+<span id="cb21-7"><a href=""></a></span>
+<span id="cb21-8"><a href=""></a>    <span class="co">// number and x can be used here</span></span>
+<span id="cb21-9"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Number: "</span> <span class="op">&lt;&lt;</span> number <span class="op">&lt;&lt;</span> <span class="st">", x: "</span> <span class="op">&lt;&lt;</span> x <span class="op">&lt;&lt;</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb21-10"><a href=""></a><span class="op">}</span> <span class="co">// x and number go out of scope here and can no longer be used</span></span>
+<span id="cb21-11"><a href=""></a></span>
+<span id="cb21-12"><a href=""></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb21-13"><a href=""></a><span class="op">{</span></span>
+<span id="cb21-14"><a href=""></a>    <span class="co">// x can not be used here because it's not in scope yet</span></span>
+<span id="cb21-15"><a href=""></a></span>
+<span id="cb21-16"><a href=""></a>    <span class="dt">int</span> x<span class="op">{</span> <span class="dv">0</span> <span class="op">};</span> <span class="co">// x enters scope here and can now be used within this function</span></span>
+<span id="cb21-17"><a href=""></a>    do_useless_thing<span class="op">(</span><span class="fl">15.5</span><span class="op">);</span>     <span class="co">// x is still alive during this function call</span></span>
+<span id="cb21-18"><a href=""></a>    do_useless_thing<span class="op">();</span>         <span class="co">// x is still alive during this function call</span></span>
+<span id="cb21-19"><a href=""></a></span>
+<span id="cb21-20"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb21-21"><a href=""></a><span class="op">}</span> <span class="co">// x goes out of scope here and can no longer be used</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section>
+<section id="local-scope-example-02" class="slide level2">
+<h2>Local scope: Example 02</h2>
+<p>Let us look at this program.</p>
+<div id="lst-local-scope-01" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-local-scope-01-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;20: Local scope: Example 02
+</figcaption>
+<div aria-describedby="lst-local-scope-01-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb22-1"><a href=""></a><span class="co">// This program will not compile due to scope violation.</span></span>
+<span id="cb22-2"><a href=""></a><span class="co">// See compile error related to variable 'x'.</span></span>
+<span id="cb22-3"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb22-4"><a href=""></a></span>
+<span id="cb22-5"><a href=""></a><span class="co">// Demonstrates local variable scope within a function.</span></span>
+<span id="cb22-6"><a href=""></a><span class="dt">void</span> do_useless_thing<span class="op">(</span><span class="dt">double</span> number <span class="op">=</span> <span class="fl">0.0</span><span class="op">)</span></span>
+<span id="cb22-7"><a href=""></a><span class="op">{</span></span>
+<span id="cb22-8"><a href=""></a>    <span class="op">{</span>   <span class="co">// </span><span class="al">NOTE</span><span class="co">: New inner scope begins here</span></span>
+<span id="cb22-9"><a href=""></a>        <span class="dt">int</span> x<span class="op">{</span> <span class="dv">42</span> <span class="op">};</span> <span class="co">// x enters scope here and can be used within this function</span></span>
+<span id="cb22-10"><a href=""></a>        <span class="co">// number and x can be used here</span></span>
+<span id="cb22-11"><a href=""></a>        <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Number: "</span> <span class="op">&lt;&lt;</span> number <span class="op">&lt;&lt;</span> <span class="st">", x: "</span> <span class="op">&lt;&lt;</span> x <span class="op">&lt;&lt;</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb22-12"><a href=""></a>    <span class="op">}</span>   <span class="co">// x's scope ends here but number is still in scope</span></span>
+<span id="cb22-13"><a href=""></a></span>
+<span id="cb22-14"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Number again: "</span> <span class="op">&lt;&lt;</span> number <span class="op">&lt;&lt;</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb22-15"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Trying to access x here would cause a compile error.</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span></span>
+<span id="cb22-16"><a href=""></a></span>
+<span id="cb22-17"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"x: "</span> <span class="op">&lt;&lt;</span> x <span class="op">&lt;&lt;</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span><span class="op">;</span>    <span class="co">// This will cause a compile error</span></span>
+<span id="cb22-18"><a href=""></a><span class="op">}</span> </span>
+<span id="cb22-19"><a href=""></a></span>
+<span id="cb22-20"><a href=""></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb22-21"><a href=""></a><span class="op">{</span></span>
+<span id="cb22-22"><a href=""></a>    do_useless_thing<span class="op">(</span><span class="fl">15.5</span><span class="op">);</span>    </span>
+<span id="cb22-23"><a href=""></a>    do_useless_thing<span class="op">();</span></span>
+<span id="cb22-24"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb22-25"><a href=""></a><span class="op">}</span> </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section>
+<section id="scope-versus-lifetime" class="slide level2">
+<h2>Scope versus Lifetime</h2>
+<p>In programming in general, <strong>scope</strong> and <strong>lifetime</strong> are two closely related but distinct concepts that determine how and when a variable can be used.</p>
+<p>The simplest way to remember:</p>
+<ul>
+<li><strong>Scope</strong> is about <strong>Visibility</strong> (Where can I see this variable in the code?).</li>
+<li><strong>Lifetime</strong> is about <strong>Existence</strong> (How long does this variable stay in memory?).</li>
+</ul>
+</section>
+<section id="scope-versus-lifetime-1" class="slide level2">
+<h2>Scope versus Lifetime</h2>
+<h3 id="scope-the-where">Scope (the “<strong>where</strong>”)</h3>
+<ul>
+<li><strong>Scope</strong> refers to the region of your program’s source code where a variable’s name is recognized and can be used.</li>
+<li>If you try to access a variable outside its scope, the compiler will throw an error saying the variable is undefined.</li>
+<li>Therefore, <strong>Scope</strong> is a <strong>compile-time property</strong> in C/C++.</li>
+</ul>
+<blockquote>
+<p><strong>Remark</strong>: Other languages, we have Dynamic Scope (versus Static Scope as in C++) which is a runtime property</p>
+</blockquote>
+<div class="fragment">
+<h3 id="lifetime">Lifetime</h3>
+<ul>
+<li><strong>Lifetime</strong> (also called storage duration) refers to the time interval during which the variable actually occupies a physical spot in your computer’s memory.</li>
+<li>It starts when the memory is allocated and ends when it is reclaimed by the system.</li>
+<li>Therefore, <strong>Lifetime</strong> is a <strong>run-time property</strong>.</li>
+</ul>
+</div>
+</section>
+<section id="scope-versus-lifetime-example" class="slide level2">
+<h2>Scope versus Lifetime: Example</h2>
+<div id="lst-scope-vs-lifetime" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-scope-vs-lifetime-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;21: Scope versus Lifetime
+</figcaption>
+<div aria-describedby="lst-scope-vs-lifetime-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb23-1"><a href=""></a><span class="dt">void</span> second_function<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb23-2"><a href=""></a>    <span class="co">// x is ALIVE in memory, but OUT OF SCOPE here.</span></span>
+<span id="cb23-3"><a href=""></a>    <span class="co">// I cannot access 'x' directly.</span></span>
+<span id="cb23-4"><a href=""></a><span class="op">}</span></span>
+<span id="cb23-5"><a href=""></a><span class="dt">void</span> first_function<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb23-6"><a href=""></a>    <span class="dt">int</span> x <span class="op">=</span> <span class="dv">10</span><span class="op">;</span> <span class="co">// 'x' scope starts here</span></span>
+<span id="cb23-7"><a href=""></a>    second_function<span class="op">();</span> </span>
+<span id="cb23-8"><a href=""></a>    <span class="co">// 'x' scope continues here</span></span>
+<span id="cb23-9"><a href=""></a><span class="op">}</span> <span class="co">// 'x' scope and lifetime end here</span></span>
+<span id="cb23-10"><a href=""></a></span>
+<span id="cb23-11"><a href=""></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb23-12"><a href=""></a>    first_function<span class="op">();</span></span>
+<span id="cb23-13"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb23-14"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+<div class="fragment">
+<p>But I don’t think you actually believe me. Let me prove this to you!</p>
+</div>
+</section>
+<section id="scope-versus-lifetime-example-1" class="slide level2">
+<h2>Scope versus Lifetime: Example</h2>
+<div id="lst-scope-vs-lifetime-proof" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-scope-vs-lifetime-proof-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;22: Prove that Scope and Lifetime are different concepts
+</figcaption>
+<div aria-describedby="lst-scope-vs-lifetime-proof-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb24-1"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb24-2"><a href=""></a></span>
+<span id="cb24-3"><a href=""></a><span class="dt">void</span> second_function<span class="op">(</span><span class="dt">int</span><span class="op">*</span> pointer_to_x<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb24-4"><a href=""></a>    <span class="co">// We cannot use the name 'x' here (Out of Scope)</span></span>
+<span id="cb24-5"><a href=""></a>    <span class="co">// But we can look at the memory address we were given</span></span>
+<span id="cb24-6"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Inside second_function:"</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span></span>
+<span id="cb24-7"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"Value at memory address: "</span> <span class="op">&lt;&lt;</span> <span class="op">*</span>pointer_to_x <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span></span>
+<span id="cb24-8"><a href=""></a><span class="op">}</span></span>
+<span id="cb24-9"><a href=""></a></span>
+<span id="cb24-10"><a href=""></a><span class="dt">void</span> first_function<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb24-11"><a href=""></a>    <span class="dt">int</span> x <span class="op">=</span> <span class="dv">10</span><span class="op">;</span> <span class="co">// 'x' starts its lifetime here</span></span>
+<span id="cb24-12"><a href=""></a>    <span class="co">// We pass the ADDRESS of x (&amp;x) to the next function</span></span>
+<span id="cb24-13"><a href=""></a>    second_function<span class="op">(&amp;</span>x<span class="op">);</span> </span>
+<span id="cb24-14"><a href=""></a><span class="op">}</span> <span class="co">// 'x' dies here</span></span>
+<span id="cb24-15"><a href=""></a></span>
+<span id="cb24-16"><a href=""></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb24-17"><a href=""></a>    first_function<span class="op">();</span></span>
+<span id="cb24-18"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb24-19"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+<div class="fragment">
+<p>I hope you believe me now. Actually, you can debug the code in the last slide and still see that variable <code>x</code> is alive during the execution of <code>second_function()</code>.</p>
+</div>
+</section></section>
+<section>
+<section id="forward-declarations-and-definitions" class="title-slide slide level1 center">
+<h1>Forward declarations and definitions</h1>
+
+</section>
+<section id="quick-introduction" class="slide level2">
+<h2>Quick introduction</h2>
+<div id="lst-without-forward-declaration" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-without-forward-declaration-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;23: Seemingly innocent sampe program that gives compile error
+</figcaption>
+<div aria-describedby="lst-without-forward-declaration-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb25-1"><a href=""></a><span class="co">// This program will not compile because 'add' is used before it is declared.</span></span>
+<span id="cb25-2"><a href=""></a><span class="co">// TO FIX THIS, we need to either add a forward declaration of 'add' before main(),</span></span>
+<span id="cb25-3"><a href=""></a><span class="co">// or move the definition of 'add' above main().</span></span>
+<span id="cb25-4"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb25-5"><a href=""></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb25-6"><a href=""></a><span class="op">{</span></span>
+<span id="cb25-7"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"The sum of 3 and 4 is: "</span> <span class="op">&lt;&lt;</span> add<span class="op">(</span><span class="fl">3.0</span><span class="op">,</span> <span class="fl">4.0</span><span class="op">)</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
+<span id="cb25-8"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb25-9"><a href=""></a><span class="op">}</span></span>
+<span id="cb25-10"><a href=""></a></span>
+<span id="cb25-11"><a href=""></a><span class="dt">float</span> add<span class="op">(</span><span class="dt">float</span> x<span class="op">,</span> <span class="dt">float</span> y<span class="op">)</span></span>
+<span id="cb25-12"><a href=""></a><span class="op">{</span></span>
+<span id="cb25-13"><a href=""></a>    <span class="cf">return</span> x <span class="op">+</span> y<span class="op">;</span></span>
+<span id="cb25-14"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+<ul>
+<li>This program doesn’t compile is as the compiler compiles the contents of code files sequentially.</li>
+<li>When the compiler reaches the function call <code>add()</code> in <code>main()</code>, it does not know what <code>add</code> is.</li>
+</ul>
+</section>
+<section id="fix-the-innocent-program-option-1-reorder-the-function-definitions" class="slide level2">
+<h2>Fix the “innocent” program – Option 1: Reorder the function definitions</h2>
+<div id="lst-fix-innocent-program-01" class="cpp listing quarto-float quarto-figure quarto-figure-left" data-filename="reorder_function_defs.cpp">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-fix-innocent-program-01-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;24: Reorder the function definitions to fix the innocent program.
+</figcaption>
+<div aria-describedby="lst-fix-innocent-program-01-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>reorder_function_defs.cpp</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26" data-filename="reorder_function_defs.cpp"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb26-1"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb26-2"><a href=""></a></span>
+<span id="cb26-3"><a href=""></a><span class="dt">int</span> add<span class="op">(</span><span class="dt">int</span> x<span class="op">,</span> <span class="dt">int</span> y<span class="op">)</span></span>
+<span id="cb26-4"><a href=""></a><span class="op">{</span></span>
+<span id="cb26-5"><a href=""></a>    <span class="cf">return</span> x <span class="op">+</span> y<span class="op">;</span></span>
+<span id="cb26-6"><a href=""></a><span class="op">}</span></span>
+<span id="cb26-7"><a href=""></a></span>
+<span id="cb26-8"><a href=""></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb26-9"><a href=""></a><span class="op">{</span></span>
+<span id="cb26-10"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"The sum of 3 and 4 is: "</span> <span class="op">&lt;&lt;</span> add<span class="op">(</span><span class="dv">3</span><span class="op">,</span> <span class="dv">4</span><span class="op">)</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
+<span id="cb26-11"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb26-12"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</figure>
+</div>
+<ul>
+<li>The fixing is simple.</li>
+<li>But, what happens if we have <em>many functions</em> and <em>the functions may call each other</em>.</li>
+<li>We must figure out which functions call which other functions.</li>
+</ul>
+</section>
+<section id="fix-the-innocent-program-option-1-use-a-forward-declaration" class="slide level2">
+<h2>Fix the “innocent” program – Option 1: Use a forward declaration</h2>
+<div id="lst-forward-declration" class="cpp listing quarto-float quarto-figure quarto-figure-left" data-filename="with_forward_declaration.cpp">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-forward-declration-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;25: Use forward decleration to fix the innocent program
+</figcaption>
+<div aria-describedby="lst-forward-declration-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>with_forward_declaration.cpp</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27" data-filename="with_forward_declaration.cpp"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb27-1"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb27-2"><a href=""></a></span>
+<span id="cb27-3"><a href=""></a><span class="dt">int</span> add<span class="op">(</span><span class="dt">int</span> x<span class="op">,</span> <span class="dt">int</span> y<span class="op">);</span> <span class="co">// forward declaration of add() (using a function declaration)</span></span>
+<span id="cb27-4"><a href=""></a></span>
+<span id="cb27-5"><a href=""></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb27-6"><a href=""></a><span class="op">{</span>   </span>
+<span id="cb27-7"><a href=""></a>    <span class="co">// this works because we forward declared add() above</span></span>
+<span id="cb27-8"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"The sum of 3 and 4 is: "</span> <span class="op">&lt;&lt;</span> add<span class="op">(</span><span class="dv">3</span><span class="op">,</span> <span class="dv">4</span><span class="op">)</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span>     </span>
+<span id="cb27-9"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb27-10"><a href=""></a><span class="op">}</span></span>
+<span id="cb27-11"><a href=""></a></span>
+<span id="cb27-12"><a href=""></a><span class="dt">int</span> add<span class="op">(</span><span class="dt">int</span> x<span class="op">,</span> <span class="dt">int</span> y<span class="op">)</span> <span class="co">// even though the body of add() isn't defined until here</span></span>
+<span id="cb27-13"><a href=""></a><span class="op">{</span></span>
+<span id="cb27-14"><a href=""></a>    <span class="cf">return</span> x <span class="op">+</span> y<span class="op">;</span></span>
+<span id="cb27-15"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</figure>
+</div>
+</section>
+<section id="why-forward-declarations" class="slide level2">
+<h2>Why forward declarations!!!</h2>
+<ul>
+<li class="fragment">Why would we use a <strong>forward declaration</strong> if we could just reorder the functions to make our programs work?</li>
+<li class="fragment">Most often, forward declarations are used to tell the compiler about the existence of some function that has been defined in a different code file.</li>
+<li class="fragment">Reordering isn’t possible in this scenario because the caller and the callee are in completely different files!</li>
+<li class="fragment"><em>Forward declarations allow us to define functions in whatever order maximizes organization</em> (e.g.&nbsp;by clustering related functions together) or reader understanding.</li>
+</ul>
+<div class="fragment">
+<blockquote>
+<p>Less often, there are times when we have two functions that call each other. Reordering isn’t possible in this case either, as there is no way to reorder the functions such that each is before the other. Forward declarations give us a way to resolve such circular dependencies.</p>
+</blockquote>
+</div>
+</section></section>
+<section>
+<section id="programs-with-multiple-code-files" class="title-slide slide level1 center">
+<h1>Programs with multiple code files</h1>
+
+</section>
+<section id="adding-files-to-your-project" class="slide level2">
+<h2>Adding files to your project</h2>
+<ul>
+<li>As programs get larger, it is common to split them into multiple files for organizational or reusability purposes.</li>
+<li>One advantage of working with an IDE is that they make working with multiple files much easier.</li>
+<li>You already know how to create and compile single-file projects. Adding new files to existing projects is not difficult.</li>
+</ul>
+<blockquote>
+
+<ul>
+<li>It is not easy to teach how to add files to the project using lecture slide.</li>
+<li>I will illustrate the steps here in live lecture and also in the recorded video (to be uploaded!)</li>
+</ul>
+
+</blockquote>
+</section>
+<section id="a-multi-file-example" class="slide level2">
+<h2>A multi-file example</h2>
+<p>Let us revisit</p>
+<div id="lst-without-forward-declaration" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-without-forward-declaration-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;26: Seemingly innocent sampe program that gives compile error
+</figcaption>
+<div aria-describedby="lst-without-forward-declaration-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb28-1"><a href=""></a><span class="co">// This program will not compile because 'add' is used before it is declared.</span></span>
+<span id="cb28-2"><a href=""></a><span class="co">// TO FIX THIS, we need to either add a forward declaration of 'add' before main(),</span></span>
+<span id="cb28-3"><a href=""></a><span class="co">// or move the definition of 'add' above main().</span></span>
+<span id="cb28-4"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb28-5"><a href=""></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb28-6"><a href=""></a><span class="op">{</span></span>
+<span id="cb28-7"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"The sum of 3 and 4 is: "</span> <span class="op">&lt;&lt;</span> add<span class="op">(</span><span class="fl">3.0</span><span class="op">,</span> <span class="fl">4.0</span><span class="op">)</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
+<span id="cb28-8"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb28-9"><a href=""></a><span class="op">}</span></span>
+<span id="cb28-10"><a href=""></a></span>
+<span id="cb28-11"><a href=""></a><span class="dt">float</span> add<span class="op">(</span><span class="dt">float</span> x<span class="op">,</span> <span class="dt">float</span> y<span class="op">)</span></span>
+<span id="cb28-12"><a href=""></a><span class="op">{</span></span>
+<span id="cb28-13"><a href=""></a>    <span class="cf">return</span> x <span class="op">+</span> y<span class="op">;</span></span>
+<span id="cb28-14"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section>
+<section id="a-multi-file-example-1" class="slide level2">
+<h2>A multi-file example</h2>
+<p>Now, let us take a look at a similar multi-file program</p>
+<div id="lst-add-file" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-add-file-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;27: File <code>add.cpp</code>
+</figcaption>
+<div aria-describedby="lst-add-file-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb29-1"><a href=""></a><span class="dt">float</span> add<span class="op">(</span><span class="dt">float</span> x<span class="op">,</span> <span class="dt">float</span> y<span class="op">)</span></span>
+<span id="cb29-2"><a href=""></a><span class="op">{</span></span>
+<span id="cb29-3"><a href=""></a>    <span class="cf">return</span> x <span class="op">+</span> y<span class="op">;</span></span>
+<span id="cb29-4"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+<div id="lst-main-file" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-main-file-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;28: File <code>main.cpp</code>
+</figcaption>
+<div aria-describedby="lst-main-file-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb30-1"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb30-2"><a href=""></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb30-3"><a href=""></a><span class="op">{</span></span>
+<span id="cb30-4"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"The sum of 3 and 4 is: "</span> <span class="op">&lt;&lt;</span> add<span class="op">(</span><span class="fl">3.0</span><span class="op">,</span> <span class="fl">4.0</span><span class="op">)</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
+<span id="cb30-5"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb30-6"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+<ul>
+<li><p>Your compiler may compile either <code>add.cpp</code> or <code>main.cpp</code> first.</p></li>
+<li><p>Either way, <code>main.cpp</code> will fail to compile, giving the same compiler error as the previous example.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href=""></a><span class="st">'add'</span><span class="ex">:</span> identifier not found</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+</ul>
+</section>
+<section id="why-limited-visibility-and-short-memory-in-compilation-process" class="slide level2">
+<h2>Why limited visibility and short memory in compilation process</h2>
+<p>This limited visibility and short memory is intentional, for a few reasons:</p>
+<ul>
+<li class="fragment">It allows the source files of a project to be compiled in any order.</li>
+<li class="fragment">When we change a source file, only that source file needs to be recompiled.</li>
+<li class="fragment">It reduces the possibility of naming conflicts between identifiers in different files.</li>
+</ul>
+<div class="fragment">
+<p><strong>What to do next</strong></p>
+</div>
+<div class="fragment">
+<ul>
+<li>Our options for a solution here are the same as before: place the definition of function <code>add</code> before function <code>main</code>, or <strong>satisfy the compiler with a forward declaration</strong>.</li>
+<li>In this case, because function <code>add</code> is in another file, the <em>reordering option isn’t possible</em>.</li>
+</ul>
+</div>
+</section>
+<section id="a-multi-file-example-using-forward-declaration" class="slide level2">
+<h2>A multi-file example: Using forward declaration</h2>
+<div id="lst-main-file" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-main-file-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;29: File <code>main.cpp</code>
+</figcaption>
+<div aria-describedby="lst-main-file-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb32-1"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb32-2"><a href=""></a></span>
+<span id="cb32-3"><a href=""></a><span class="co">// needed so main.cpp knows that add() is a function defined elsewhere</span></span>
+<span id="cb32-4"><a href=""></a><span class="dt">float</span> add<span class="op">(</span><span class="dt">float</span> x<span class="op">,</span> <span class="dt">float</span> y<span class="op">)</span></span>
+<span id="cb32-5"><a href=""></a></span>
+<span id="cb32-6"><a href=""></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb32-7"><a href=""></a><span class="op">{</span></span>
+<span id="cb32-8"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"The sum of 3 and 4 is: "</span> <span class="op">&lt;&lt;</span> add<span class="op">(</span><span class="fl">3.0</span><span class="op">,</span> <span class="fl">4.0</span><span class="op">)</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
+<span id="cb32-9"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb32-10"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+<div id="lst-add-file" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-add-file-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;30: File <code>add.cpp</code>
+</figcaption>
+<div aria-describedby="lst-add-file-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb33-1"><a href=""></a><span class="dt">float</span> add<span class="op">(</span><span class="dt">float</span> x<span class="op">,</span> <span class="dt">float</span> y<span class="op">)</span></span>
+<span id="cb33-2"><a href=""></a><span class="op">{</span></span>
+<span id="cb33-3"><a href=""></a>    <span class="cf">return</span> x <span class="op">+</span> y<span class="op">;</span></span>
+<span id="cb33-4"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+<p>How to compile:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb34-1"><a href=""></a><span class="ex">g++</span> main.cpp add.cpp <span class="at">-o</span> program</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section></section>
+<section>
+<section id="header-files" class="title-slide slide level1 center">
+<h1>Header files</h1>
+
+</section>
+<section id="header-files-1" class="slide level2">
+<h2>Header files</h2>
+<ul>
+<li class="fragment"><p>As programs grow larger (and make use of more files and functions), having to manually add a large number of (possibly different) forward declarations to the top of each file becomes extremely tedious.</p>
+<blockquote>
+<p>For example, if you have a 5 file program, each of which requires 10 forward declarations, you’re going to have to copy/paste in 50 forward declarations.<br>
+Now consider the case where you have 100 files and they each require 100 forward declarations. This simply doesn’t scale!</p>
+</blockquote></li>
+<li class="fragment"><p>To address this issue, C++ programs typically take a different approach: <strong>Header Files</strong></p></li>
+</ul>
+</section>
+<section id="header-files-2" class="slide level2">
+<h2>Header files</h2>
+<ul>
+<li>Header files usually have a <code>.h</code> extension, but you will occasionally see them with a <code>.hpp</code> extension or no extension at all.</li>
+<li>Conventionally, header files are used to propagate a bunch of related forward declarations into a code file.</li>
+</ul>
+<blockquote>
+<p><strong>Key insight</strong></p>
+<p>Header files allow us to put declarations in one place and then import them wherever we need them. This can save a lot of typing in multi-file programs.</p>
+</blockquote>
+</section>
+<section id="using-header-files-to-propagate-forward-declarations" class="slide level2">
+<h2>Using header files to propagate forward declarations</h2>
+<ul>
+<li>Let us go back to the example we were discussing in a previous lesson.</li>
+</ul>
+<div id="lst-add-file" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-add-file-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;31: File <code>add.cpp</code>
+</figcaption>
+<div aria-describedby="lst-add-file-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb35-1"><a href=""></a><span class="dt">float</span> add<span class="op">(</span><span class="dt">float</span> x<span class="op">,</span> <span class="dt">float</span> y<span class="op">)</span></span>
+<span id="cb35-2"><a href=""></a><span class="op">{</span></span>
+<span id="cb35-3"><a href=""></a>    <span class="cf">return</span> x <span class="op">+</span> y<span class="op">;</span></span>
+<span id="cb35-4"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+<div id="lst-main-file" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-main-file-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;32: File <code>main.cpp</code>
+</figcaption>
+<div aria-describedby="lst-main-file-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb36-1"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb36-2"><a href=""></a></span>
+<span id="cb36-3"><a href=""></a><span class="dt">float</span> add<span class="op">(</span><span class="dt">float</span> x<span class="op">,</span> <span class="dt">float</span> y<span class="op">)</span> <span class="co">// forward declaration for "main" to see "add"</span></span>
+<span id="cb36-4"><a href=""></a></span>
+<span id="cb36-5"><a href=""></a><span class="dt">int</span> main<span class="op">()</span></span>
+<span id="cb36-6"><a href=""></a><span class="op">{</span></span>
+<span id="cb36-7"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"The sum of 3 and 4 is: "</span> <span class="op">&lt;&lt;</span> add<span class="op">(</span><span class="fl">3.0</span><span class="op">,</span> <span class="fl">4.0</span><span class="op">)</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
+<span id="cb36-8"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb36-9"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section>
+<section id="using-header-files-to-propagate-forward-declarations-1" class="slide level2">
+<h2>Using header files to propagate forward declarations</h2>
+<p>Here’s our completed header file:</p>
+<div id="lst-add.h" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-add.h-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;33: Header file for function <code>add()</code>: <code>add.h</code>
+</figcaption>
+<div aria-describedby="lst-add.h-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb37-1"><a href=""></a><span class="co">// This is the content of the .h file, which is where the declarations go</span></span>
+<span id="cb37-2"><a href=""></a><span class="dt">float</span> add<span class="op">(</span><span class="dt">float</span> x<span class="op">,</span> <span class="dt">float</span> y<span class="op">);</span>    <span class="co">// function prototype for add.h </span></span>
+<span id="cb37-3"><a href=""></a>                                <span class="co">// don't forget the semicolon!</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+<div id="lst-main.cpp" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-main.cpp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;34: Main program file: <code>main.cpp</code>
+</figcaption>
+<div aria-describedby="lst-main.cpp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb38-1"><a href=""></a><span class="pp">#include </span><span class="im">"add.h"</span><span class="pp">    </span><span class="co">// Insert contents of add.h at this point.  </span></span>
+<span id="cb38-2"><a href=""></a>                    <span class="co">// Note use of double quotes here.</span></span>
+<span id="cb38-3"><a href=""></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb38-4"><a href=""></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb38-5"><a href=""></a>    <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">"The sum of 3 and 4 is "</span> <span class="op">&lt;&lt;</span> add<span class="op">(</span><span class="dv">3</span><span class="op">,</span> <span class="dv">4</span><span class="op">)</span> <span class="op">&lt;&lt;</span> <span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">;</span></span>
+<span id="cb38-6"><a href=""></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb38-7"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+<div id="lst-add.cpp" class="cpp listing quarto-float quarto-figure quarto-figure-left">
+<figure class="quarto-float quarto-float-lst">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-add.cpp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;35: File implementing function <code>add()</code>: <code>add.cpp</code>
+</figcaption>
+<div aria-describedby="lst-add.cpp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb39-1"><a href=""></a><span class="pp">#include </span><span class="im">"add.h"</span><span class="pp">    </span><span class="co">// Insert contents of add.h at this point.  </span></span>
+<span id="cb39-2"><a href=""></a>                    <span class="co">// Note use of double quotes here.</span></span>
+<span id="cb39-3"><a href=""></a><span class="dt">float</span> add<span class="op">(</span><span class="dt">float</span> x<span class="op">,</span> <span class="dt">float</span> y<span class="op">)</span> <span class="op">{</span> <span class="cf">return</span> x <span class="op">+</span> y<span class="op">;</span> <span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</section>
+<section id="compiling-and-linking" class="slide level2">
+<h2>Compiling and Linking</h2>
+
+<img data-src="./figures/IncludeHeader.png" class="r-stretch quarto-figure-center"><p class="caption">Compiling and Linking</p><p>Compile the program as follows:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb40-1"><a href=""></a><span class="ex">g++</span> main.cpp add.h <span class="at">-c</span> main.o</span>
+<span id="cb40-2"><a href=""></a><span class="ex">g++</span> add.cpp add.h <span class="at">-c</span> add.o</span>
+<span id="cb40-3"><a href=""></a><span class="ex">g++</span> main.o add.o <span class="at">-o</span> program</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section></section>
+<section>
+<section id="whats-next-after-this-chapter" class="title-slide slide level1 center">
+<h1>What’s next after this chapter</h1>
+
+</section>
+<section id="things-you-can-learn-after-this-chapter" class="slide level2">
+<h2>Things you can learn after this chapter</h2>
+<p>You can learn the following topics through</p>
+<ul>
+<li>Google Gemini using Guided Learning mode</li>
+<li>Website <a href="https://www.learncpp.com">learncpp.com</a></li>
+</ul>
+<p>Extra content to learn:</p>
+<ol type="1">
+<li>Naming collisions and an introduction to namespaces - <a href="https://www.learncpp.com/cpp-tutorial/naming-collisions-and-an-introduction-to-namespaces/">Click on this link</a></li>
+<li>Introduction to preprocessor - <a href="https://www.learncpp.com/cpp-tutorial/introduction-to-the-preprocessor/">Click on this link</a></li>
+<li>Header guards - <a href="https://www.learncpp.com/cpp-tutorial/header-guards/">Click on this link</a></li>
+</ol>
+
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="chap_02_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="chap_02_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="chap_02_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="chap_02_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="chap_02_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="chap_02_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="chap_02_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="chap_02_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="chap_02_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="chap_02_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: true,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>
