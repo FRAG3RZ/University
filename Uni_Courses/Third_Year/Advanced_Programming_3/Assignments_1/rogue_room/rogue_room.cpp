@@ -5,7 +5,7 @@
 using namespace std;
 
 //================================
-//==========Setup section=========
+//=======Class setup section======
 //================================
 
 class Game {
