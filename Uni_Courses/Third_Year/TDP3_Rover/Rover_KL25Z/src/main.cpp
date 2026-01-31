@@ -13,14 +13,42 @@
 #include <cmath>
 #include <cstdint>
 
+/*Custom Includes
 #include "wav_player.h"
-
 #include "car_x_pcm.h"
+*/
+//===============State Machine==================
 
-// === Pin assignments (adjust if needed) ===
+enum class CtrlState {
+    FOLLOW,
+    SEEK_LEFT,
+    SEEK_RIGHT,
+    NUDGE_FORWARD,
+    TURN_90_RIGHT,
+    TURN_90_LEFT,
+    BRAKING,
+    STOPPED
+};
+
+CtrlState state = CtrlState::FOLLOW;
+Kernel::Clock::time_point state_until;
+bool pending_left_turn = false;
+
+static int last_pos = 0;
+CtrlState after_brake_state = CtrlState::FOLLOW;
+
+//==================Pin assignments============================
 
 // DAC output
 AnalogOut dac(PTE30);
+
+//Light sensors
+AnalogIn left_sensor_2(A0);
+AnalogIn left_sensor_1(A1);
+AnalogIn middle_sensor(A2);
+AnalogIn right_sensor_2(A3);
+AnalogIn right_sensor_1(A4);
+DigitalOut sensor_transistor(D0);
 
 // Left motor
 DigitalOut left_in2(D7);
@@ -39,7 +67,6 @@ DigitalOut LED_B(LED_BLUE);
 
 // === Constants ===
 #define PWM_FREQ_HZ 20000.0f
-#define DUTY_MAX    1.0f   // mbed::PwmOut uses 0.0–1.0 range for duty cycle
 
 // === LED helper ===
 void leds_set(bool r, bool g, bool b) {
@@ -48,7 +75,297 @@ void leds_set(bool r, bool g, bool b) {
     LED_B = !b;
 }
 
-//========================SOUND=========================
+void leds_for_state(CtrlState st) {
+    switch (st) {
+        case CtrlState::FOLLOW:        leds_set(false, true,  false); break; // Green
+        case CtrlState::SEEK_LEFT:     leds_set(true,  false, false); break; // Red
+        case CtrlState::SEEK_RIGHT:    leds_set(true,  false, false); break; // Red
+        case CtrlState::NUDGE_FORWARD: leds_set(true,  true,  false); break; // Yellow
+        case CtrlState::TURN_90_LEFT:  leds_set(true,  false, true ); break; // Magenta
+        case CtrlState::TURN_90_RIGHT: leds_set(false, true,  true ); break; // Cyan
+        case CtrlState::BRAKING:       leds_set(false, false, true ); break; // Blue
+        case CtrlState::STOPPED:       leds_set(false, false, false); break; // Off
+        default:                       leds_set(false, false, false); break;
+    }
+}  
+
+//=================LIGHT SENSING CONTROL TICKER===================
+
+Ticker controlTick;
+volatile bool control_due = false;
+void control_isr() { control_due = true; }
+
+//=================ROVER MOVE PROTORYPES===============
+
+void motors_all_off();
+void motors_brake(float strength);
+void move_forward(float duty);
+void turn_left_coast_inner(float duty_outer);
+void turn_right_coast_inner(float duty_outer);
+void turn_left_skid_reverse_inner(float duty_outer);
+void turn_right_skid_reverse_inner(float duty_outer);
+
+void motors_release();
+void enter_state(CtrlState st, int duration_ms);
+bool state_time_elapsed();
+
+void enter_state(CtrlState st, int duration_ms) {
+    state = st;
+    state_until = Kernel::Clock::now() + chrono::milliseconds(duration_ms);
+    leds_for_state(state);
+}
+
+bool state_time_elapsed() {
+    return Kernel::Clock::now() >= state_until;
+}
+
+void motors_release() {
+    motors_all_off();
+}
+
+//======================================================
+//====================TUNABLE===========================
+
+static constexpr float DUTY_FWD = 0.25f;
+static constexpr float DUTY_TURN = 0.55f;
+static constexpr float BRAKE_STRENGTH = 0.40f;
+
+static constexpr int NUDGE_MS  = 500; //90 degree calibration
+static constexpr int TURN90_MS = 1600; // right 90
+static constexpr int TURN90L_MS = 1600; // left 90 (tune separately if needed)
+static constexpr int BRAKE_MS  = 120;
+
+static constexpr float POS_DEADBAND_F = 0.25f; // tune 0.20–0.40
+
+//======================================================
+//======================================================
+
+//=============================================================
+//======================LINE SENSING STATE-MACHINE=============
+//=============================================================
+
+static constexpr float TH_ON  = 0.60f; // tune these if line sensing doesn't work
+static constexpr float TH_OFF = 0.50f;
+
+struct Sensors {
+    float a[5];     // raw analog 0..1
+    bool  on[5];    // debounced digital
+};
+
+Sensors read_sensors() {
+    Sensors s{};
+    s.a[0] = left_sensor_2.read();
+    s.a[1] = left_sensor_1.read();
+    s.a[2] = middle_sensor.read();
+    s.a[3] = right_sensor_1.read();
+    s.a[4] = right_sensor_2.read();
+
+    // static keeps previous state for hysteresis
+    static bool prev[5] = {false,false,false,false,false};
+
+    for (int i=0;i<5;i++) {
+        if (!prev[i] && s.a[i] >= TH_ON)  prev[i] = true;
+        if ( prev[i] && s.a[i] <= TH_OFF) prev[i] = false;
+        s.on[i] = prev[i];
+    }
+    return s;
+}
+
+struct LineInfo {
+    int   active_count = 0;
+    int   pos_sum      = 0;     // sum of weights for active sensors
+    float pos          = 0.0f;  // normalized position estimate (-2..+2 approx)
+    bool centered      = false;
+    bool lost          = false;
+    bool junction      = false;
+    bool right_turn_sig = false;
+    bool left_turn_sig  = false;
+};
+
+LineInfo interpret(const Sensors& s) {
+    static constexpr int w[5] = {-2, -1, 0, 1, 2};
+
+    LineInfo li{};
+
+    for (int i = 0; i < 5; i++) {
+        if (s.on[i]) {
+            li.active_count++;
+            li.pos_sum += w[i];
+        }
+    }
+
+    li.lost = (li.active_count == 0);
+
+    // Normalized "where is the line" estimate:
+    // -2 far left ... +2 far right (roughly), stable even when 2-3 sensors are on.
+    li.pos = (!li.lost) ? (static_cast<float>(li.pos_sum) / li.active_count) : 0.0f;
+
+    // Strictly centered only if middle is on and immediate neighbors aren't
+    li.centered = s.on[2] && !(s.on[1] || s.on[3]);
+
+    // Turn signatures (tight): outer pair must be ON
+    li.right_turn_sig = (s.on[3] && s.on[4]);
+    li.left_turn_sig  = (s.on[0] && s.on[1]);
+
+    // Junction-ish detection (stricter than before):
+    // Require >=3 sensors active OR center + an outer-pair signature.
+    li.junction = (li.active_count >= 3) || (s.on[2] && (li.right_turn_sig || li.left_turn_sig));
+
+    return li;
+}
+
+void controller_update() {
+    Sensors s = read_sensors();
+    LineInfo li = interpret(s);
+
+    // Keep last seen direction for SEEK
+    if (!li.lost) {
+        last_pos = (li.pos >= 0.0f) ? +1 : -1;   // store direction only
+    }
+
+    switch (state) {
+
+    case CtrlState::FOLLOW: {
+
+        // --- 90-degree turn detection ---
+        if (li.junction) {
+            if (li.right_turn_sig && !li.left_turn_sig) {
+                pending_left_turn = false;
+                enter_state(CtrlState::NUDGE_FORWARD, NUDGE_MS);
+                move_forward(DUTY_FWD);
+                break;
+            }
+            if (li.left_turn_sig && !li.right_turn_sig) {
+                pending_left_turn = true;
+                enter_state(CtrlState::NUDGE_FORWARD, NUDGE_MS);
+                move_forward(DUTY_FWD);
+                break;
+            }
+            // ambiguous -> fall through to normal following
+        }
+
+        // --- Normal line following ---
+        if (li.centered) {
+            move_forward(DUTY_FWD);
+            break;
+        }
+
+        if (!li.lost) {
+            if (li.pos < -POS_DEADBAND_F) {
+                turn_left_coast_inner(DUTY_TURN);
+            } else if (li.pos > POS_DEADBAND_F) {
+                turn_right_coast_inner(DUTY_TURN);
+            } else {
+                move_forward(DUTY_FWD);
+            }
+            break;
+        }
+
+        // --- Lost line completely: brake briefly then seek ---
+        enter_state(CtrlState::BRAKING, BRAKE_MS);
+        motors_brake(BRAKE_STRENGTH);
+
+        // decide where to seek after braking finishes
+        // (we'll pick this in BRAKING-> transition below)
+        break;
+    }
+
+    case CtrlState::SEEK_LEFT: {
+        if (!li.lost) {
+            enter_state(CtrlState::BRAKING, BRAKE_MS);
+            motors_brake(BRAKE_STRENGTH);
+            // after brake, we go FOLLOW (see BRAKING)
+        } else {
+            turn_left_skid_reverse_inner(DUTY_TURN);
+        }
+        break;
+    }
+
+    case CtrlState::SEEK_RIGHT: {
+        if (!li.lost) {
+            enter_state(CtrlState::BRAKING, BRAKE_MS);
+            motors_brake(BRAKE_STRENGTH);
+        } else {
+            turn_right_skid_reverse_inner(DUTY_TURN);
+        }
+        break;
+    }
+
+    case CtrlState::BRAKING: {
+        if (state_time_elapsed()) {
+            motors_release();
+
+            // If we were braking to start a planned turn, go do it now
+            if (after_brake_state == CtrlState::TURN_90_LEFT) {
+                enter_state(CtrlState::TURN_90_LEFT, TURN90L_MS);
+                turn_left_skid_reverse_inner(DUTY_TURN);
+            }
+            else if (after_brake_state == CtrlState::TURN_90_RIGHT) {
+                enter_state(CtrlState::TURN_90_RIGHT, TURN90_MS);
+                turn_right_skid_reverse_inner(DUTY_TURN);
+            }
+            else {
+                if (li.lost) {
+                    enter_state((last_pos >= 0) ? CtrlState::SEEK_RIGHT : CtrlState::SEEK_LEFT, 0);
+                } else {
+                    enter_state(CtrlState::FOLLOW, 0);
+                }
+            }
+
+            // Always reset
+            after_brake_state = CtrlState::FOLLOW;
+
+        } else {
+            motors_brake(BRAKE_STRENGTH);
+        }
+        break;
+    }
+
+
+    case CtrlState::NUDGE_FORWARD: {
+        if (state_time_elapsed()) {
+            // Decide which 90° turn we want AFTER braking
+            after_brake_state = pending_left_turn ? CtrlState::TURN_90_LEFT : CtrlState::TURN_90_RIGHT;
+
+            // Brake briefly before the turn
+            enter_state(CtrlState::BRAKING, BRAKE_MS);
+            motors_brake(BRAKE_STRENGTH);
+        } else {
+            move_forward(DUTY_FWD);
+        }
+        break;
+    }
+
+
+    case CtrlState::TURN_90_RIGHT: {
+        if (state_time_elapsed()) {
+            enter_state(CtrlState::BRAKING, BRAKE_MS);
+            motors_brake(BRAKE_STRENGTH);
+        } else {
+            turn_right_skid_reverse_inner(0.7);
+        }
+        break;
+    }
+
+    case CtrlState::TURN_90_LEFT: {
+        if (state_time_elapsed()) {
+            enter_state(CtrlState::BRAKING, BRAKE_MS);
+            motors_brake(BRAKE_STRENGTH);
+        } else {
+            turn_left_skid_reverse_inner(0.65);
+        }
+        break;
+    }
+
+    case CtrlState::STOPPED:
+    default:
+        motors_all_off();
+        break;
+    }
+}
+
+
+/*========================SOUND=========================
 
 Ticker audioTick;
 
@@ -96,6 +413,7 @@ void play_car_x() {
 bool is_playing() { return playing; }
 
 //=================================================
+*/
 
 // === PWM helper ===
 void motors_set_duty_sync(float left_duty, float right_duty) {
@@ -110,25 +428,17 @@ void motors_all_off() {
     // Coast both motors
     left_in1 = 0; left_in2 = 0;
     right_in1 = 0; right_in2 = 0;
-
-    leds_set(false, false, false);
 }
 
 // === Stop modes ===
 
 // Soft stop: let motors freewheel
-void motors_coast(int duration_ms) {
-    printf("Coasting...\n");
-    leds_set(true, true, false);  // Yellow
+void motors_coast() {
     motors_all_off();
-    thread_sleep_for(duration_ms);
 }
 
 // Hard stop: short both motor terminals to brake
-void motors_brake(float strength, int duration_ms) {
-    printf("Braking at %.0f%%\n", strength * 100);
-    leds_set(false, false, true); // Blue
-
+void motors_brake(float strength) {
     // Both inputs HIGH -> motor terminals shorted (active braking)
     left_in1 = 1; left_in2 = 1;
     right_in1 = 1; right_in2 = 1;
@@ -136,179 +446,115 @@ void motors_brake(float strength, int duration_ms) {
     // Apply PWM to control braking torque
     left_pwm.write(strength);
     right_pwm.write(strength);
-
-    thread_sleep_for(duration_ms);
-    motors_all_off(); // release brake to coast
 }
 
 // === Motion routines ===
-void move_forward(float duty, int duration_ms) {
-    printf("Forward at %.0f%%\n", duty * 100);
-    leds_set(false, true, false); // Green
+void move_forward(float duty) {
 
     left_in1 = 1; left_in2 = 0; // Left forward
     right_in1 = 1; right_in2 = 0; // Right forward
 
     motors_set_duty_sync(duty, duty);
-    thread_sleep_for(duration_ms);
-    motors_all_off();
 }
 
-void move_forward_different(float dut_R, float dut_L, int duration_ms) {
-    leds_set(false, true, false); // Green
+void move_forward_different(float dut_R, float dut_L) {
 
     left_in1 = 1; left_in2 = 0; // Left forward
     right_in1 = 1; right_in2 = 0; // Right forward
 
     motors_set_duty_sync(dut_L, dut_R);
-    thread_sleep_for(duration_ms);
-    motors_all_off();
 }
 
-void move_backward(float duty, int duration_ms) {
-    printf("Backward at %.0f%%\n", duty * 100);
-    leds_set(true, false, false); // Red
+void move_backward(float duty) {
 
     left_in1 = 0; left_in2 = 1; // Left backward
     right_in1 = 0; right_in2 = 1; // Right backward
 
     motors_set_duty_sync(duty, duty);
-    thread_sleep_for(duration_ms);
-    motors_all_off();
 }
 
-void turn_left_skid_reverse_inner(float duty_outer, int duration_ms) {
-    printf("Turn left (reverse inner)\n");
-    leds_set(true, false, true); // Magenta
+void turn_left_skid_reverse_inner(float duty_outer) {
 
     left_in1 = 0; left_in2 = 1; // Left reverse
     right_in1 = 1; right_in2 = 0; // Right forward
 
     motors_set_duty_sync(duty_outer, duty_outer);
-    thread_sleep_for(duration_ms);
-    motors_all_off();
 }
 
-void turn_left_break_inner(float break_inner, float duty_outer, int duration_ms) {
-    printf("Turn left (coast inner)\n");
-    leds_set(true, true, false); // Yellow
+void turn_left_break_inner(float break_inner, float duty_outer) {
 
     left_in1 = 1; left_in2 = 1; // Left break
     right_in1 = 1; right_in2 = 0; // Right forward
 
     left_pwm.write(break_inner);
     right_pwm.write(duty_outer);
-    
-    thread_sleep_for(duration_ms);
-    motors_all_off();
 }
 
-void turn_right_skid_reverse_inner(float duty_outer, int duration_ms) {
-    printf("Turn right (reverse inner)\n");
-    leds_set(false, true, true); // Cyan
+void turn_right_skid_reverse_inner(float duty_outer) {
 
     left_in1 = 1; left_in2 = 0; // Left forward
     right_in1 = 0; right_in2 = 1; // Right reverse
 
     motors_set_duty_sync(duty_outer, duty_outer);
-    thread_sleep_for(duration_ms);
-    motors_all_off();
 }
 
-void turn_right_break_inner(float break_inner, float duty_outer, int duration_ms) {
-    printf("Turn left (coast inner)\n");
-    leds_set(true, true, false); // Yellow
+void turn_right_break_inner(float break_inner, float duty_outer) {
 
     left_in1 = 1; left_in2 = 0; // Left go
     right_in1 = 1; right_in2 = 1; // Right break
 
     left_pwm.write(duty_outer);
     right_pwm.write(break_inner);
-
-    thread_sleep_for(duration_ms);
-    motors_all_off();
 }
 
-void turn_right_coast_inner(float duty_outer, int duration_ms) {
-    printf("Turn left (coast inner)\n");
-    leds_set(true, true, false); // Yellow
+void turn_right_coast_inner(float duty_outer) {
 
     left_in1 = 1; left_in2 = 0; // Left go
     right_in1 = 0; right_in2 = 0; // Right coast
 
     left_pwm.write(duty_outer);
     right_pwm.write(0.0f);
-
-    thread_sleep_for(duration_ms);
-    motors_all_off();
 }
 
-void turn_left_coast_inner(float duty_outer, int duration_ms) {
-    printf("Turn left (coast inner)\n");
-    leds_set(true, true, false); // Yellow
+void turn_left_coast_inner(float duty_outer) {
 
     left_in1 = 0; left_in2 = 0; // Left coast
     right_in1 = 1; right_in2 = 0; // Right go
 
     right_pwm.write(duty_outer);
     left_pwm.write(0.0f);
-
-    thread_sleep_for(duration_ms);
-    motors_all_off();
 }
 
-
 int main() {
-    /*
-    printf("Dual-motor control demo (KL25Z + L298 + mbed)\n");
 
     // Set PWM frequency
     left_pwm.period(1.0f / PWM_FREQ_HZ);
     right_pwm.period(1.0f / PWM_FREQ_HZ);
 
+    //Start the control ticker
+    controlTick.attach(&control_isr, 20ms); // 20 ms = 50 Hz control loop
+
+    sensor_transistor = 1;
+
     motors_all_off(); // Ensure safe startup
-    
-    //============DEMO============
 
-        printf("\n=== FULL MOTION DEMO START ===\n");
-        
-        // -----------------------------------------------------
-        // 1. Basic forward and backward
-        // -----------------------------------------------------
-        /*
-        move_forward(0.2f, 1000);
-        move_forward(0.15f, 5000);
-        motors_brake(0.5f, 800);
-    5
+    enter_state(CtrlState::FOLLOW, 0); // sets LED + state_until
 
-        // -----------------------------------------------------
-        // Right degree turns
-        // ----------------------------------------------------
-        turn_left_skid_reverse_inner(0.65f, 1600);
-        motors_brake(0.5f, 200);
+    while (true) {
+        bool do_update = false;
 
-        turn_right_skid_reverse_inner(0.7f, 1600);
-        motors_brake(0.5f, 200);
-
-        // -----------------------------------------------------
-        // Smooth Turns
-        // ---------------------------------------------------
-
-        move_forward_different(0.05f, 0.3f, 5000);
-        motors_brake(0.5f, 1000);
-        */
-
-        // *** Critical fix: prevent deep sleep so Ticker keeps running ***
-        // Turn LEDs off
-        dac.write(0.5f);
-        audioTick.attach(&audio_isr, 1.0f / SAMPLE_RATE);
-
-        while (true) {
-            play_car_x();                 // play once
-            while (is_playing()) {
-                ThisThread::sleep_for(10ms);
-            }
-            ThisThread::sleep_for(1500ms);
+        core_util_critical_section_enter();
+        if (control_due) {
+            control_due = false;
+            do_update = true;
         }
+        core_util_critical_section_exit();
+
+        if (do_update) {
+            controller_update();
+        }
+
+        ThisThread::sleep_for(1ms);
+    }
 }
 
